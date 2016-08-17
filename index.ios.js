@@ -1,8 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+'use strict'
 
 import React, { Component } from 'react';
 import {
@@ -10,41 +6,85 @@ import {
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
+  TouchableHighlight
 } from 'react-native';
 
-var Login = require('./login');
+class Item extends Component {
+	render() {
+		return (
+			<Text style={styles.welcome}>
+				 {this.props.id} - {this.props.name} 
+			 </Text>
+		);
+	}
+}
+
+class Login extends Component {
+  render() {
+      return (
+        <Text style={styles.welcome}>
+          CoolWorld !!!
+        </Text>
+      )
+  }
+}
 
 class DisplayAnImage extends Component {
   render() {
     return (
       <View>
-      <Image style={styles.logo}
-        source={require('./logo.jpg')}
-      />
-
+        <Image style={styles.logo}
+            source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
+        />
       </View>
     );
   }
 }
 
-class Cool extends Component {
+class App extends Component {
+  constructor(props) {
+    super(props);
+ 
+    var items = [
+     	{"id": "1", "name": "item1"},
+      {"id": "2", "name": "item2"},
+      {"id": "3", "name": "item3"},
+      {"id": "4", "name": "item4"},
+      {"id": "5", "name": "item5"}
+    ];
+ 		this.state = {items: items};
+		//this.setState({items: items});
+  }
+  
   render() {
     return (
-      <View style={styles.container}>
-
-        <Login />
-        <DisplayAnImage />
-
+      <View style={styles.container} onClick={this.getClients}>
+      		<DisplayAnImage />
+      		<Login onPress={this.getClients.bind(this)}/> 
+      					<TouchableHighlight
+                    onPress={this.getClients.bind(this)}
+                    style={styles.button}>
+                    <Text style={styles.buttonText}>Log in</Text>
+                </TouchableHighlight>
+		      {this.showClients()}
       </View>
     );
   }
+  showClients() {
+    return this.state.items.map(function(item) {
+ 				return <Item id={item.id} name={item.name} />
+		});
+	}
+  getClients() {
+		this.setState({items: []});
+	}
 }
 
 const styles = StyleSheet.create({
   logo: {
-    width: 66,
-    height: 55,
+    width: 166,
+    height: 155,
   },
   container: {
     flex: 1,
@@ -62,6 +102,20 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+      button: {
+        height: 50,
+        backgroundColor: '#48BBEC',
+        borderColor: '#48BBEC',
+        alignSelf: 'stretch',
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 24
+    }
 });
 
-AppRegistry.registerComponent('Cool', () => Cool);
+AppRegistry.registerComponent('Cool', () => App);

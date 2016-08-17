@@ -7,15 +7,15 @@ import {
   View
 } from 'react-native';
 
-var Login = React.createClass({
-  render: function() {
+class Login extends Component {
+  render() {
       return (
-        <Text style={styles.login}>
+        <Text style={styles.logo}>
           CoolWorld !!!
         </Text>
       )
   }
-});
+}
 
 const styles = StyleSheet.create({
     container: {
