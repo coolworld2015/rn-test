@@ -1,18 +1,29 @@
 'use strict';
 
-var React = require('react');
-var ReactNative = require('react-native');
-
-
-var Text = ReactNative.Text;
-var StyleSheet = ReactNative.Text;
+import React, { Component } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 
 var Login = React.createClass({
   render: function() {
       return (
-          <Text style={{color: 'red'}}>Hello</Text>
+        <Text style={styles.login}>
+          CoolWorld !!!
+        </Text>
       )
   }
 });
 
+const styles = StyleSheet.create({
+  login: {
+    flex: 1,
+    justifyContent: 'center',
+    color: 'white',
+    alignItems: 'center',
+    backgroundColor: 'blue',
+  }
+});
 module.exports = Login;

@@ -17,9 +17,11 @@ var Login = require('./login');
 class Cool extends Component {
   render() {
     return (
-      <Text style={styles.welcome}>
-        <Login />
-      </Text>
+      <View style={styles.container}>
+        <Text style={styles.welcome}>
+          <Login />
+        </Text>
+      </View>
     );
   }
 }
