@@ -9,24 +9,43 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Image
 } from 'react-native';
 
 var Login = require('./login');
+
+class DisplayAnImage extends Component {
+  render() {
+    return (
+      <View>
+      <Image style={styles.logo}
+        source={require('./logo.jpg')}
+      />
+
+      </View>
+    );
+  }
+}
 
 class Cool extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          <Login />
-        </Text>
+
+        <Login />
+        <DisplayAnImage />
+
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 66,
+    height: 55,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
