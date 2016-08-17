@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <!-- React -->
+    <script src="https://fb.me/react-0.13.3.min.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+
+<title>Clients - LocalStorage</title>
+</head>
+<body>
+    <div id="container"></div>
+	
+<script type="text/jsx">
+
+var Item = React.createClass({
+	render: function() {
+		return (
+			<div>
+				<h4>{this.props.id} - {this.props.name}</h4>
+				<hr/>
+			</div>
+		);
+	}
+});
+
+var App = React.createClass({
+	getInitialState: function() {
+		var clients = JSON.parse(localStorage.getItem('ui-warehouse.clients'));
+		return {
+			items: []
+		};
+	},
+	addItem: function() {
+ 		var items = this.state.items;
+		items.push({
+				id: items.length+1,
+				name: items.length+1
+			});
+		this.setState({items: items});
+ 	},
+	getClients: function() {
+		this.setState({items: []});
+		var that = this;
+		var request = new XMLHttpRequest(); 
+		var url = 'http://ui-warehouse.herokuapp.com/api/clients/get';
+		
+		request.onreadystatechange = function() {
+			if(request.status==200) {
+				that.setState({items: JSON.parse(request.response)});
+			}
+		};
+		
+		request.open ('GET', url, false); 
+		request.send(''); 
+ 	},	
+	render: function() {
+ 		return (
+			<div >
+				<h1 onClick={this.getClients}> Clients  ({this.state.items.length})</h1>
+				<hr />
+				{this.showClients()}
+			</div>
+		);
+	},
+	showClients: function() {
+		return this.state.items.map(function(item) {
+ 			return <Item id={item.id} name={item.name} />
+		});
+	}
+});
+
+React.render(<App />, document.getElementById('container'));	
+</script>
+
+</body>
+</html>
