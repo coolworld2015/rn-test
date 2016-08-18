@@ -54,7 +54,6 @@ class App extends Component {
       {"id": "5", "name": "item5"}
     ];
  		this.state = {items: items};
-		//this.setState({items: items});
   }
   
   render() {
@@ -78,6 +77,24 @@ class App extends Component {
 	}
   getClients() {
 		this.setState({items: []});
+    var that = this;
+    console.log('request succeeded with json response');
+      fetch('http://ui-warehouse.herokuapp.com/api/clients/get', {
+        method: 'get',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(function(response) {
+          console.log('request succeeded with json response', JSON.parse(response._bodyInit));
+        	var items = JSON.parse(response._bodyInit);
+        	that.setState({items: items});
+        	//that.setState({items: [{"id": "1", "name": "item1"}]});
+        }).catch(function(error) {
+          console.log('request failed', error)
+        })
+      
 	}
 }
 
@@ -118,4 +135,4 @@ const styles = StyleSheet.create({
     }
 });
 
-AppRegistry.registerComponent('Cool', () => App);
+AppRegistry.registerComponent('SampleApp', () => App);
