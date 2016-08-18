@@ -1,13 +1,15 @@
 'use strict'
 
 import React, { Component } from 'react';
+
 import {
   AppRegistry,
   StyleSheet,
   Text,
   View,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  ListView
 } from 'react-native';
 
 class Item extends Component {
@@ -42,6 +44,75 @@ class DisplayAnImage extends Component {
   }
 }
 
+class Games extends Component{
+  constructor(props){
+    super(props);
+    var ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 != r2
+    });
+    this.state = {
+      ds:[{AwayTeam: "TeamA", HomeTeam: "TeamB", Selection: "AwayTeam"},{AwayTeam: "TeamC", HomeTeam: "TeamD", Selection: "HomeTeam"}],
+      dataSource:ds,
+    }
+  }
+
+  componentDidMount(){
+    this.setState({
+      dataSource:this.state.dataSource.cloneWithRows(this.state.ds),
+    })
+
+  }
+  pressRow(rowData){
+
+    var newDs = [];
+    newDs = this.state.ds;
+    newDs[0].Selection = newDs[0] == "AwayTeam" ? "HomeTeam" : "AwayTeam";
+    this.setState({
+      dataSource: this.state.dataSource.cloneWithRows(newDs)
+    })
+
+  }
+
+  renderRow(rowData){
+    return (
+      <TouchableHighlight
+        onPress={()=> this.pressRow(rowData)}
+        underlayColor = '#ddd'>
+        <View style ={styles.row}>
+          <Text style={{fontSize:18}}>{rowData.AwayTeam} @ {rowData.HomeTeam} </Text>
+          <View style={{flex:1}}>
+            <Text style={styles.selectionText}>{rowData[rowData.Selection]}</Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+
+    )
+  }
+  render(){
+    return (
+      <ListView
+        dataSource = {this.state.dataSource}
+        renderRow = {this.renderRow.bind(this)}>
+      </ListView>
+    );
+  }
+}
+var styles = StyleSheet.create({
+  row:{
+    flex:1,
+    flexDirection:'row',
+    padding:18,
+    borderBottomWidth: 1,
+    borderColor: '#d7d7d7',
+  },
+  selectionText:{
+    fontSize:15,
+    paddingTop:3,
+    color:'#b5b5b5',
+    textAlign:'right'
+  },
+});
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -53,19 +124,20 @@ class App extends Component {
       {"id": "4", "name": "item4"},
       {"id": "5", "name": "item5"}
     ];
- 		this.state = {items: items};
+ 		this.state = {items: []};
   }
 
   render() {
     return (
-      <View style={styles.container} onClick={this.getClients}>
+      <View style={styles.container}>
       		<DisplayAnImage />
-      		<Login onPress={this.getClients.bind(this)}/>
+      		<Login/>
       					<TouchableHighlight
                     onPress={this.getClients.bind(this)}
                     style={styles.button}>
-                    <Text style={styles.buttonText}>Log in</Text>
+                    <Text style={styles.buttonText}>Get Clients</Text>
                 </TouchableHighlight>
+          <Games />
 		      {this.showClients()}
       </View>
     );
@@ -78,7 +150,7 @@ class App extends Component {
   getClients() {
 		this.setState({items: []});
     var that = this;
-    console.log('request started ...');
+    console.log('request succeeded with json response');
       fetch('http://ui-warehouse.herokuapp.com/api/clients/get', {
         method: 'get',
         headers: {
@@ -90,7 +162,6 @@ class App extends Component {
           console.log('request succeeded with json response', JSON.parse(response._bodyInit));
         	var items = JSON.parse(response._bodyInit);
         	that.setState({items: items});
-        	//that.setState({items: [{"id": "1", "name": "item1"}]});
         }).catch(function(error) {
           console.log('request failed', error)
         })
