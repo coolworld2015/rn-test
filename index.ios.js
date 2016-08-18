@@ -14,7 +14,7 @@ class Item extends Component {
 	render() {
 		return (
 			<Text style={styles.welcome}>
-				 {this.props.id} - {this.props.name} 
+				 {this.props.id} - {this.props.name}
 			 </Text>
 		);
 	}
@@ -45,7 +45,7 @@ class DisplayAnImage extends Component {
 class App extends Component {
   constructor(props) {
     super(props);
- 
+
     var items = [
      	{"id": "1", "name": "item1"},
       {"id": "2", "name": "item2"},
@@ -55,12 +55,12 @@ class App extends Component {
     ];
  		this.state = {items: items};
   }
-  
+
   render() {
     return (
       <View style={styles.container} onClick={this.getClients}>
       		<DisplayAnImage />
-      		<Login onPress={this.getClients.bind(this)}/> 
+      		<Login onPress={this.getClients.bind(this)}/>
       					<TouchableHighlight
                     onPress={this.getClients.bind(this)}
                     style={styles.button}>
@@ -78,7 +78,7 @@ class App extends Component {
   getClients() {
 		this.setState({items: []});
     var that = this;
-    console.log('request succeeded with json response');
+    console.log('request started ...');
       fetch('http://ui-warehouse.herokuapp.com/api/clients/get', {
         method: 'get',
         headers: {
@@ -94,7 +94,7 @@ class App extends Component {
         }).catch(function(error) {
           console.log('request failed', error)
         })
-      
+
 	}
 }
 
@@ -135,4 +135,4 @@ const styles = StyleSheet.create({
     }
 });
 
-AppRegistry.registerComponent('SampleApp', () => App);
+AppRegistry.registerComponent('Cool', () => App);
