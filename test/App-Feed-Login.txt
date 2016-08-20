@@ -1,0 +1,413 @@
+'use strict'
+
+import React, { Component } from 'react';
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableHighlight,
+    ListView,
+    ScrollView,
+    ActivityIndicatorIOS,
+    TabBarIOS,
+    NavigatorIOS,
+    TextInput
+} from 'react-native';
+
+class App extends Component {
+      constructor(props){
+        super(props);
+
+        this.state = {
+            checkingAuth: false,
+            showProgress: false,
+            isLoggedIn: false 
+        }
+    }
+  
+  render() {
+    if(this.state.checkingAuth){
+      return (
+        <View style={styles.container}>
+          <ActivityIndicatorIOS
+            animating={true}
+            size="large"
+            style={styles.loader} />
+        </View>
+      )
+    }
+
+    if(this.state.isLoggedIn){
+      return (
+        <AppContainer />
+      )
+    }else{
+      return (
+        <Login onLogin={this.onLogin.bind(this)} />
+      )
+    }
+  }
+
+  onLogin(){
+    console.log('onLogin');
+    this.setState({isLoggedIn: true});
+  }
+
+  onLogOut(){
+    console.log('onLogOut');
+    this.setState({isLoggedIn: false});
+  }
+}
+
+class Login extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            showProgress: false
+        }
+    }
+
+    render(){
+        var errorCtrl = <View />;
+
+        if(!this.state.success && this.state.badCredentials){
+            errorCtrl = <Text style={styles.error}>
+                That username and password combination did not work
+            </Text>;
+        }
+
+        if(!this.state.success && this.state.unknownError){
+            errorCtrl = <Text style={styles.error}>
+                We experienced an unexpected issue
+            </Text>;
+        }
+
+        return (
+            <View style={styles.container}>
+                <Image style={styles.logo} 
+          				source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
+          			/>
+                <Text style={styles.heading}>RX-Base</Text>
+                <TextInput
+                    onChangeText={(text)=> this.setState({username: text})}
+                    style={styles.loginInput}
+                    placeholder="Login"></TextInput>
+                <TextInput
+                    onChangeText={(text)=> this.setState({password: text})}
+                    style={styles.loginInput}
+                    placeholder="Password" secureTextEntry={true}></TextInput>
+                <TouchableHighlight
+                    onPress={this.onLoginPressed.bind(this)}
+                    style={styles.button}>
+                    <Text style={styles.buttonText}>Log in</Text>
+                </TouchableHighlight>
+
+                {errorCtrl}
+
+                <ActivityIndicatorIOS
+                    animating={this.state.showProgress}
+                    size="large"
+                    style={styles.loader}
+                 />
+            </View>
+        )
+    }
+
+    onLoginPressed(){
+        console.log('Attempting to log in with username ' + this.props.onLogin);
+				this.props.onLogin();
+    }
+}
+
+class ClientDetails extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            pushEvent: props.pushEvent
+        };
+    }
+	
+    componentDidMount(){
+      console.log('componentDidMount');
+          
+    }
+	
+  render() {
+    return (
+      
+      <View style={{
+          flex: 1,
+          paddingTop: 80,
+          justifyContent: 'flex-start',
+          alignItems: 'center'
+      }}>
+ 
+        <Text style={styles.welcome}>
+          {this.state.pushEvent.id}
+        </Text>
+
+        <Text style={styles.welcome}>
+          {this.state.pushEvent.name}
+        </Text>
+
+        <Text style={styles.welcome}>
+          {this.state.pushEvent.address}
+        </Text>      
+
+        <Text style={styles.welcome}>
+          {this.state.pushEvent.cv}
+        </Text>         
+
+        <Text style={styles.welcome}>
+          {this.state.pushEvent.description}
+        </Text>  
+ 
+      </View>
+    );
+  }
+}
+
+class Feed extends Component {
+    constructor(props){
+        super(props);
+
+        var ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 != r2
+        });
+      
+        var items = [];
+      
+        this.state = {
+            dataSource: ds.cloneWithRows(items),
+            showProgress: true
+        };
+    }
+
+    componentDidMount(){
+      console.log('componentDidMount');
+         this.fetchFeed();
+    }
+
+    fetchFeed(){
+     var that = this;
+       fetch('http://ui-warehouse.herokuapp.com/api/clients/get', {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+        .then(function(response) {
+   				console.log('request succeeded !!!');
+        	var items = JSON.parse(response._bodyInit);
+         
+           that.setState({
+             dataSource: that.state.dataSource.cloneWithRows(items),
+             showProgress: false
+           });
+       })
+    }
+  
+    pressRow(rowData){
+        this.props.navigator.push({
+            title: rowData.name,
+            component: ClientDetails,
+            passProps: {
+                pushEvent: rowData
+            }
+        });
+    }
+  
+    renderRow(rowData){
+        return (
+          	<TouchableHighlight
+                onPress={()=> this.pressRow(rowData)}
+                underlayColor='#ddd'
+          	>
+            <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 20,
+                alignItems: 'center',
+                borderColor: '#D7D7D7',
+                borderBottomWidth: 1,
+                backgroundColor: '#fff'
+            }}>
+              <Text style={{backgroundColor: '#fff'}}>
+                  {rowData.name}
+              </Text>
+            </View>
+          </TouchableHighlight>    
+        );
+    }
+
+    render(){
+      if(this.state.showProgress){
+        return (
+            <View style={{
+                flex: 1,
+                justifyContent: 'center'
+            }}>
+                <ActivityIndicatorIOS
+                    size="large"
+                    animating={true} />
+            </View>
+        );
+      }
+        return (
+          <ListView style={{marginTop: 65}}
+            dataSource={this.state.dataSource}
+            renderRow={this.renderRow.bind(this)} 
+  				/>
+      )
+	}
+}
+
+class Search extends Component {
+        constructor(props){
+        super(props);
+
+        this.state = {
+        }
+    }
+  
+    render() {
+      return (
+        			 <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 20,
+                alignItems: 'center',
+                borderColor: '#D7D7D7',
+                borderBottomWidth: 1,
+                backgroundColor: '#fff'
+            }}>
+ 
+        				<TouchableHighlight
+                    onPress={this.onTabPressed.bind(this)}
+                    style={styles.button}>
+                    <Text style={styles.buttonText}>Tab</Text>
+                </TouchableHighlight>
+ 
+            </View>
+      )
+    }
+      onTabPressed(){
+				this.props.onLogOut();
+    }
+}
+
+class AppContainer extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            selectedTab: 'feed'
+        }
+    }
+
+    render(){
+      return (
+        <TabBarIOS style={styles.AppContainer}>
+            <TabBarIOS.Item
+                title="Clients"
+                selected={this.state.selectedTab == 'feed'}
+        				onPress={()=> this.setState({selectedTab: 'feed'})}
+  					>
+                <NavigatorIOS
+                    style={{
+                        flex: 1
+                    }}
+                    initialRoute={{
+                        component: Feed,
+                        title: 'Clients'
+                    }}
+                />
+            </TabBarIOS.Item>
+        
+            <TabBarIOS.Item
+                title="Search"
+                selected={this.state.selectedTab == 'search'}
+                onPress={()=> this.setState({selectedTab: 'search'})}
+             >
+ 
+                <NavigatorIOS
+                    style={{
+                        flex: 1
+                    }}
+                    initialRoute={{
+                        component: Search,
+                        title: 'Search'
+                    }}
+                />
+            </TabBarIOS.Item>
+        
+        </TabBarIOS>
+      );
+    }
+}
+const styles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#F5FCFF',
+    },
+    welcome: {
+      fontSize: 20,
+      textAlign: 'center',
+      margin: 20,
+    },
+    container: {
+        backgroundColor: '#F5FCFF',
+        paddingTop: 40,
+        padding: 10,
+        alignItems: 'center',
+        flex: 1
+    },
+    logo: {
+        width: 66,
+        height: 65
+    },
+    heading: {
+        fontSize: 30,
+        margin: 10,
+        marginBottom: 20
+    },
+    loginInput: {
+        height: 50,
+        marginTop: 10,
+        padding: 4,
+        fontSize: 18,
+        borderWidth: 1,
+        borderColor: '#48BBEC',
+        borderRadius: 0,
+        color: '#48BBEC'
+    },
+    button: {
+        height: 50,
+        backgroundColor: '#48BBEC',
+        borderColor: '#48BBEC',
+        alignSelf: 'stretch',
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 24
+    },
+    loader: {
+        marginTop: 20
+    },
+    error: {
+        color: 'red',
+        paddingTop: 10
+    }
+});
+AppRegistry.registerComponent('SampleApp', () => App);

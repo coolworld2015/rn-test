@@ -1,0 +1,250 @@
+'use strict'
+
+import React, { Component } from 'react';
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableHighlight,
+    ListView,
+    ScrollView,
+    ActivityIndicatorIOS,
+    TabBarIOS,
+    NavigatorIOS
+} from 'react-native';
+
+class Login extends Component {
+    render() {
+      return (
+        			 <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 20,
+                alignItems: 'center',
+                borderColor: '#D7D7D7',
+                borderBottomWidth: 1,
+                backgroundColor: '#fff'
+            }}>
+              <Text style={{backgroundColor: '#fff'}}>
+                  
+              </Text>
+            </View>
+      )
+    }
+}
+
+class ClientDetails extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            pushEvent: props.pushEvent
+        };
+    }
+	
+    componentDidMount(){
+      console.log('componentDidMount');
+          
+    }
+	
+  render() {
+    return (
+      
+      <View style={{
+          flex: 1,
+          paddingTop: 80,
+          justifyContent: 'flex-start',
+          alignItems: 'center'
+      }}>
+ 
+        <Text style={styles.welcome}>
+          {this.state.pushEvent.id}
+        </Text>
+
+        <Text style={styles.welcome}>
+          {this.state.pushEvent.name}
+        </Text>
+
+        <Text style={styles.welcome}>
+          {this.state.pushEvent.address}
+        </Text>      
+
+        <Text style={styles.welcome}>
+          {this.state.pushEvent.cv}
+        </Text>         
+
+        <Text style={styles.welcome}>
+          {this.state.pushEvent.description}
+        </Text>  
+ 
+      </View>
+    );
+  }
+}
+
+class Feed extends Component {
+    constructor(props){
+        super(props);
+
+        var ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 != r2
+        });
+      
+        var items = [];
+      
+        this.state = {
+            dataSource: ds.cloneWithRows(items),
+            showProgress: true
+        };
+    }
+
+    componentDidMount(){
+      console.log('componentDidMount');
+         this.fetchFeed();
+    }
+
+    fetchFeed(){
+     var that = this;
+       fetch('http://ui-warehouse.herokuapp.com/api/clients/get', {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+        .then(function(response) {
+   				console.log('request succeeded !!!');
+        	var items = JSON.parse(response._bodyInit);
+         
+           that.setState({
+             dataSource: that.state.dataSource.cloneWithRows(items),
+             showProgress: false
+           });
+       })
+    }
+  
+    pressRow(rowData){
+        this.props.navigator.push({
+            title: rowData.name,
+            component: ClientDetails,
+            passProps: {
+                pushEvent: rowData
+            }
+        });
+    }
+  
+    renderRow(rowData){
+        return (
+          	<TouchableHighlight
+                onPress={()=> this.pressRow(rowData)}
+                underlayColor='#ddd'
+          	>
+            <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 20,
+                alignItems: 'center',
+                borderColor: '#D7D7D7',
+                borderBottomWidth: 1,
+                backgroundColor: '#fff'
+            }}>
+              <Text style={{backgroundColor: '#fff'}}>
+                  {rowData.name}
+              </Text>
+            </View>
+          </TouchableHighlight>    
+        );
+    }
+
+    render(){
+      if(this.state.showProgress){
+        return (
+            <View style={{
+                flex: 1,
+                justifyContent: 'center'
+            }}>
+                <ActivityIndicatorIOS
+                    size="large"
+                    animating={true} />
+            </View>
+        );
+      }
+        return (
+          <ListView style={{marginTop: 65}}
+            dataSource={this.state.dataSource}
+            renderRow={this.renderRow.bind(this)} 
+  				/>
+      )
+	}
+}
+
+class AppContainer extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            selectedTab: 'search'
+        }
+    }
+
+    render(){
+      return (
+        <TabBarIOS style={styles.container}>
+            <TabBarIOS.Item
+                title="Clients"
+                selected={this.state.selectedTab == 'feed'}
+        				onPress={()=> this.setState({selectedTab: 'feed'})}
+  					>
+                <NavigatorIOS
+                    style={{
+                        flex: 1
+                    }}
+                    initialRoute={{
+                        component: Feed,
+                        title: 'Clients'
+                    }}
+                />
+            </TabBarIOS.Item>
+        
+            <TabBarIOS.Item
+                title="Search"
+                selected={this.state.selectedTab == 'search'}
+                onPress={()=> this.setState({selectedTab: 'search'})}
+             >
+ 
+                <NavigatorIOS
+                    style={{
+                        flex: 1
+                    }}
+                    initialRoute={{
+                        component: Login,
+                        title: 'Login'
+                    }}
+                />
+            </TabBarIOS.Item>
+        
+        </TabBarIOS>
+      );
+    }
+}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 20,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+});
+AppRegistry.registerComponent('SampleApp', () => AppContainer);
