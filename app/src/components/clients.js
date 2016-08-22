@@ -35,8 +35,7 @@ class Clients extends Component {
       	this.getClients();
     }
 
-    getClients(){
-     var that = this;
+    getClients(){ 
        fetch('http://ui-warehouse.herokuapp.com/api/clients/get', {
             method: 'get',
             headers: {
