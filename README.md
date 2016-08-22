@@ -17,3 +17,5 @@ react-native start
 -------------------------------------------------------------------------------------------------
 react-native run-ios
 react-native run-ios --simulator="iPhone 5"
+-------------------------------------------------------------------------------------------------
+http/https - NSAllowsArbitraryLoads in \ios\Cool\Info.plist
