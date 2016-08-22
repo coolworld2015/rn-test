@@ -16,6 +16,8 @@ import {
     TextInput
 } from 'react-native';
 
+import ClientDetails from './clientDetails';
+
 class Clients extends Component {
     constructor(props){
         super(props);
@@ -30,10 +32,10 @@ class Clients extends Component {
             showProgress: true
         };
 
-      	this.fetchFeed();
+      	this.getClients();
     }
 
-    fetchFeed(){
+    getClients(){
      var that = this;
        fetch('http://ui-warehouse.herokuapp.com/api/clients/get', {
             method: 'get',
@@ -42,12 +44,11 @@ class Clients extends Component {
               'Content-Type': 'application/json'
             }
           })
-        .then(function(response) {
-   				console.log('request succeeded !!!');
-        	var items = JSON.parse(response._bodyInit);
+ 				.then((response)=> response.json())
+        .then((responseData)=> {
 
-           that.setState({
-             dataSource: that.state.dataSource.cloneWithRows(items),
+           this.setState({
+             dataSource: that.state.dataSource.cloneWithRows(responseData),
              showProgress: false
            });
        })
@@ -103,10 +104,11 @@ class Clients extends Component {
           <ListView style={{marginTop: 65}}
             dataSource={this.state.dataSource}
             renderRow={this.renderRow.bind(this)}
-  				/>
+  		  />
       )
 	}
 }
+
 
 const styles = StyleSheet.create({
     AppContainer: {

@@ -16,6 +16,8 @@ import {
     TextInput
 } from 'react-native';
 
+import CollectionDetails from './collectionDetails';
+
 class Collection extends Component {
     constructor(props){
         super(props);
@@ -55,7 +57,7 @@ class Collection extends Component {
     pressRow(rowData){
         this.props.navigator.push({
             title: rowData.name,
-            component: ClientDetails,
+            component: CollectionDetails,
             passProps: {
                 pushEvent: rowData
             }
@@ -71,12 +73,22 @@ class Collection extends Component {
             <View style={{
                 flex: 1,
                 flexDirection: 'row',
-                padding: 20,
+                padding: 0,
                 alignItems: 'center',
                 borderColor: '#D7D7D7',
                 borderBottomWidth: 1,
                 backgroundColor: '#fff'
             }}>
+              <Image
+                  source={{uri: rowData.pic}}
+                  style={{
+                         height: 100,
+                         width: 100,
+                         borderRadius: 20,
+                         margin: 20
+                        }}
+              />
+
               <Text style={{backgroundColor: '#fff'}}>
                   {rowData.name}
               </Text>
