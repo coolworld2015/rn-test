@@ -47,8 +47,8 @@ class Collection extends Component {
           .then((responseData)=> {
 
   		   this.setState({
-    			 dataSource: that.state.dataSource.cloneWithRows(items),
-    			 showProgress: false
+			 dataSource: this.state.dataSource.cloneWithRows(responseData),
+			 showProgress: false
   		   });
        })
     }
