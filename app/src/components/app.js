@@ -1,3 +1,21 @@
+'use strict'
+
+import React, { Component } from 'react';
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableHighlight,
+    ListView,
+    ScrollView,
+    ActivityIndicatorIOS,
+    TabBarIOS,
+    NavigatorIOS,
+    TextInput
+} from 'react-native';
+
 class App extends Component {
       constructor(props){
         super(props);
@@ -5,10 +23,10 @@ class App extends Component {
         this.state = {
             checkingAuth: false,
             showProgress: false,
-            isLoggedIn: false 
+            isLoggedIn: false
         }
     }
-  
+
   render() {
     if(this.state.checkingAuth){
       return (
@@ -42,3 +60,5 @@ class App extends Component {
     this.setState({isLoggedIn: false});
   }
 }
+
+export class App;

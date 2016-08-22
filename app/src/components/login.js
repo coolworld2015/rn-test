@@ -1,3 +1,21 @@
+'use strict'
+
+import React, { Component } from 'react';
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableHighlight,
+    ListView,
+    ScrollView,
+    ActivityIndicatorIOS,
+    TabBarIOS,
+    NavigatorIOS,
+    TextInput
+} from 'react-native';
+
 class Login extends Component {
     constructor(props){
         super(props);
@@ -24,7 +42,7 @@ class Login extends Component {
 
         return (
             <View style={styles.container}>
-                <Image style={styles.logo} 
+                <Image style={styles.logo}
           				source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
           			/>
                 <Text style={styles.heading}>RX-Base</Text>
@@ -58,3 +76,5 @@ class Login extends Component {
 				this.props.onLogin();
     }
 }
+
+export class Login;
