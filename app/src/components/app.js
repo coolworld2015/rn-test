@@ -16,6 +16,9 @@ import {
     TextInput
 } from 'react-native';
 
+import Login from './login';
+import AppContainer from './appContainer';
+
 class App extends Component {
       constructor(props){
         super(props);
@@ -61,4 +64,4 @@ class App extends Component {
   }
 }
 
-export class App;
+module.exports = App;

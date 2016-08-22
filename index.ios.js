@@ -6,6 +6,6 @@ import {
   AppRegistry
 } from 'react-native';
 
-import App from 'react';
+import App from './app/src/components/app';
 
 AppRegistry.registerComponent('Cool', () => App);
