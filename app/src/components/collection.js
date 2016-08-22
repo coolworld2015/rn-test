@@ -35,8 +35,7 @@ class Collection extends Component {
       	this.getCollection();
     }
 
-    getCollection(){
-     var that = this;
+    getCollection(){ 
        fetch('http://ui-collection.herokuapp.com/api/items/get', {
             method: 'get',
             headers: {
@@ -44,13 +43,13 @@ class Collection extends Component {
               'Content-Type': 'application/json'
             }
           })
-        .then(function(response) {
-			var items = JSON.parse(response._bodyInit);
+          .then((response)=> response.json())
+          .then((responseData)=> {
 
-		   that.setState({
-			 dataSource: that.state.dataSource.cloneWithRows(items),
-			 showProgress: false
-		   });
+  		   this.setState({
+    			 dataSource: that.state.dataSource.cloneWithRows(items),
+    			 showProgress: false
+  		   });
        })
     }
 
