@@ -9,7 +9,6 @@ import {
     Image,
     TouchableHighlight,
     ListView,
-    ScrollView,
     ActivityIndicatorIOS,
     TabBarIOS,
     NavigatorIOS,
@@ -17,68 +16,71 @@ import {
 } from 'react-native';
 
 class Search extends Component {
-        constructor(props){
+    constructor(props){
         super(props);
+
         this.state = {
+            showProgress: false
         }
     }
 
-    render() {
-      return (
-			 <View style={{
-                flex: 1,
-        				top: 100,
-                flexDirection: 'row',
-                padding: 20,
-                alignItems: 'center',
-                borderColor: '#D7D7D7',
-                borderBottomWidth: 1,
-                backgroundColor: '#fff'
-            }}>
+    render(){
+        var errorCtrl = <View />;
 
-				<TouchableHighlight
-                    onPress={this.onTabPressed.bind(this)}
+        if(!this.state.success && this.state.badCredentials){
+            errorCtrl = <Text style={styles.error}>
+                That username and password combination did not work
+            </Text>;
+        }
+
+        if(!this.state.success && this.state.unknownError){
+            errorCtrl = <Text style={styles.error}>
+                We experienced an unexpected issue
+            </Text>;
+        }
+
+        return (
+            <View style={styles.container}>
+          			<TouchableHighlight
                     style={styles.button}>
-                    <Text style={styles.buttonText}>Search here</Text>
+                    <Text style={styles.buttonText}>Search movies</Text>
+                </TouchableHighlight>
+          			<TextInput
+                    onChangeText={(text)=> this.setState({username: text})}
+                    style={styles.loginInput}
+                    placeholder="Search movies">
+                </TextInput>
+                    
+                <TouchableHighlight
+                    onPress={this.onLoginPressed.bind(this)}
+                    style={styles.button}>
+                    <Text style={styles.buttonText}>Search</Text>
                 </TouchableHighlight>
 
+                {errorCtrl}
+
+                <ActivityIndicatorIOS
+                    animating={this.state.showProgress}
+                    size="large"
+                    style={styles.loader}
+                 />
             </View>
-      )
+        )
     }
-      onTabPressed(){
-        this.props.navigator.push({
-            component: Login
-        });
+
+    onLoginPressed(){
+        console.log('Attempting to log in with username ' + this.props.onLogin);
+				this.props.onLogin();
     }
 }
 
 const styles = StyleSheet.create({
-    AppContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-      fontSize: 20,
-      textAlign: 'center',
-      margin: 20,
-    },
     container: {
         backgroundColor: '#F5FCFF',
         paddingTop: 40,
         padding: 10,
         alignItems: 'center',
         flex: 1
-    },
-    logo: {
-        width: 66,
-        height: 65
-    },
-    heading: {
-        fontSize: 30,
-        margin: 10,
-        marginBottom: 20
     },
     loginInput: {
         height: 50,
@@ -114,3 +116,5 @@ const styles = StyleSheet.create({
 });
 
 module.exports = Search;
+
+AppRegistry.registerComponent('SampleApp', () => Search);

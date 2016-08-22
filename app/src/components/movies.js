@@ -16,7 +16,7 @@ import {
     TextInput
 } from 'react-native';
 
-class Collection extends Component {
+class Movies extends Component {
     constructor(props){
         super(props);
 
@@ -34,7 +34,7 @@ class Collection extends Component {
     }
 
     getCollection(){ 
-       fetch('http://ui-collection.herokuapp.com/api/items/get', {
+       fetch('https://itunes.apple.com/search?media=movie&term=sex', {
             method: 'get',
             headers: {
               'Accept': 'application/json',
@@ -43,11 +43,11 @@ class Collection extends Component {
           })
           .then((response)=> response.json())
           .then((responseData)=> {
-
-  		   this.setState({
-			 dataSource: this.state.dataSource.cloneWithRows(responseData),
-			 showProgress: false
-  		   });
+						 console.log(responseData.results)
+             this.setState({
+               dataSource: this.state.dataSource.cloneWithRows(responseData.results),
+               showProgress: false
+             });
        })
     }
 
@@ -69,13 +69,15 @@ class Collection extends Component {
           	>
             <View style={styles.imgsList}>
               <Image
-                  source={{uri: rowData.pic}}
+                  source={{uri: rowData.artworkUrl100}}
                   style={styles.img}
               />
-
-              <Text>
-                  {rowData.name}
-              </Text>
+                <View> 
+                    <Text>{rowData.trackName}</Text>
+                    <Text>{rowData.country}</Text>
+                    <Text>{rowData.primaryGenreName}</Text>
+                    <Text>{rowData.artistName}</Text>
+              </View>              
             </View>
           </TouchableHighlight>
         );
@@ -121,6 +123,6 @@ const styles = StyleSheet.create({
     }
 });
 
-module.exports = Collection;
+module.exports = Movies;
 
-AppRegistry.registerComponent('SampleApp', () => Collection);
+AppRegistry.registerComponent('SampleApp', () => Movies);
