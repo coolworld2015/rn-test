@@ -10,11 +10,13 @@ import {
     TouchableHighlight,
     ListView,
     ScrollView,
-    ActivityIndicatorIOS,
+    ActivityIndicator,
     TabBarIOS,
     NavigatorIOS,
     TextInput
 } from 'react-native';
+
+import CollectionDetails from './collectionDetails';
 
 class Collection extends Component {
     constructor(props){
@@ -33,7 +35,7 @@ class Collection extends Component {
       	this.getCollection();
     }
 
-    getCollection(){ 
+    getCollection(){
        fetch('http://ui-collection.herokuapp.com/api/items/get', {
             method: 'get',
             headers: {
@@ -45,8 +47,8 @@ class Collection extends Component {
           .then((responseData)=> {
 
   		   this.setState({
-			 dataSource: this.state.dataSource.cloneWithRows(responseData),
-			 showProgress: false
+    			 dataSource: this.state.dataSource.cloneWithRows(responseData),
+    			 showProgress: false
   		   });
        })
     }
@@ -88,7 +90,7 @@ class Collection extends Component {
                 flex: 1,
                 justifyContent: 'center'
             }}>
-                <ActivityIndicatorIOS
+                <ActivityIndicator
                     size="large"
                     animating={true} />
             </View>

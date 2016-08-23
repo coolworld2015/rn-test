@@ -9,11 +9,13 @@ import {
     Image,
     TouchableHighlight,
     ListView,
-    ActivityIndicatorIOS,
+    ActivityIndicator,
     TabBarIOS,
     NavigatorIOS,
     TextInput
 } from 'react-native';
+
+import Movies from './movies';
 
 class Search extends Component {
     constructor(props){
@@ -46,20 +48,20 @@ class Search extends Component {
                     <Text style={styles.buttonText}>Search movies</Text>
                 </TouchableHighlight>
           			<TextInput
-                    onChangeText={(text)=> this.setState({username: text})}
+                    onChangeText={(text)=> this.setState({searchQuery: text})}
                     style={styles.loginInput}
                     placeholder="Search movies">
                 </TextInput>
-                    
+
                 <TouchableHighlight
-                    onPress={this.onLoginPressed.bind(this)}
+                    onPress={this.onSearchPressed.bind(this)}
                     style={styles.button}>
                     <Text style={styles.buttonText}>Search</Text>
                 </TouchableHighlight>
 
                 {errorCtrl}
 
-                <ActivityIndicatorIOS
+                <ActivityIndicator
                     animating={this.state.showProgress}
                     size="large"
                     style={styles.loader}
@@ -68,9 +70,14 @@ class Search extends Component {
         )
     }
 
-    onLoginPressed(){
-        console.log('Attempting to log in with username ' + this.props.onLogin);
-				this.props.onLogin();
+    onSearchPressed(){
+        this.props.navigator.push({
+            component: Movies,
+            title: 'Results for ' + this.state.searchQuery,
+            passProps: {
+                searchQuery: this.state.searchQuery
+            }
+        });
     }
 }
 
@@ -80,7 +87,8 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         padding: 10,
         alignItems: 'center',
-        flex: 1
+        flex: 1,
+        marginTop: 65
     },
     loginInput: {
         height: 50,
@@ -116,5 +124,3 @@ const styles = StyleSheet.create({
 });
 
 module.exports = Search;
-
-AppRegistry.registerComponent('SampleApp', () => Search);

@@ -10,7 +10,7 @@ import {
     TouchableHighlight,
     ListView,
     ScrollView,
-    ActivityIndicatorIOS,
+    ActivityIndicator,
     TabBarIOS,
     NavigatorIOS,
     TextInput
@@ -27,14 +27,16 @@ class Movies extends Component {
         var items = [];
         this.state = {
             dataSource: ds.cloneWithRows(items),
+            searchQuery: props.searchQuery,
             showProgress: true
         };
 
       	this.getCollection();
     }
 
-    getCollection(){ 
-       fetch('https://itunes.apple.com/search?media=movie&term=sex', {
+    getCollection(){
+       fetch('https://itunes.apple.com/search?media=movie&term='
+             + this.state.searchQuery, {
             method: 'get',
             headers: {
               'Accept': 'application/json',
@@ -72,12 +74,12 @@ class Movies extends Component {
                   source={{uri: rowData.artworkUrl100}}
                   style={styles.img}
               />
-                <View> 
+                <View>
                     <Text>{rowData.trackName}</Text>
                     <Text>{rowData.country}</Text>
                     <Text>{rowData.primaryGenreName}</Text>
                     <Text>{rowData.artistName}</Text>
-              </View>              
+              </View>
             </View>
           </TouchableHighlight>
         );
@@ -90,7 +92,7 @@ class Movies extends Component {
                 flex: 1,
                 justifyContent: 'center'
             }}>
-                <ActivityIndicatorIOS
+                <ActivityIndicator
                     size="large"
                     animating={true} />
             </View>
@@ -104,6 +106,7 @@ class Movies extends Component {
       )
 	}
 }
+
 
 const styles = StyleSheet.create({
     imgsList: {
@@ -124,5 +127,3 @@ const styles = StyleSheet.create({
 });
 
 module.exports = Movies;
-
-AppRegistry.registerComponent('SampleApp', () => Movies);
