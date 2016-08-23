@@ -77,11 +77,16 @@ class Movies extends Component {
                   source={{uri: rowData.artworkUrl100.replace('100x100bb.jpg', '500x500bb.jpg')}}
                   style={styles.img}
               />
-                <View>
-                    <Text>{rowData.trackName}</Text>
-                    <Text>{rowData.country}</Text>
-                    <Text>{rowData.primaryGenreName}</Text>
-                    <Text>{rowData.artistName}</Text>
+              <View style={{
+                           flex: 1,
+                           flexDirection: 'column',
+                           justifyContent: 'space-between'
+                          }}>
+                  <Text>{rowData.trackName}</Text>
+            			<Text>{rowData.releaseDate.split('-')[0]}</Text>
+                  <Text>{rowData.country}</Text>
+                  <Text>{rowData.primaryGenreName}</Text>
+                  <Text>{rowData.artistName}</Text>
               </View>
             </View>
           </TouchableHighlight>
@@ -138,8 +143,8 @@ const styles = StyleSheet.create({
       backgroundColor: '#F5FCFF',
     },
     img: {
-      height: 150,
-      width: 100,
+      height: 95,
+      width: 75,
       borderRadius: 20,
       margin: 20
     }

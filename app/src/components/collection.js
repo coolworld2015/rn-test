@@ -76,9 +76,13 @@ class Collection extends Component {
                   style={styles.img}
               />
 
-              <Text>
-                  {rowData.name}
-              </Text>
+              <View style={{
+                           flex: 1,
+                           flexDirection: 'column',
+                           justifyContent: 'space-between'
+                          }}>
+                  <Text>{rowData.name}</Text>
+                </View>   
             </View>
           </TouchableHighlight>
         );
