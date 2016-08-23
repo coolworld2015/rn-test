@@ -35,7 +35,7 @@ class Clients extends Component {
       	this.getClients();
     }
 
-    getClients(){ 
+    getClients(){
        fetch('http://ui-warehouse.herokuapp.com/api/clients/get', {
             method: 'get',
             headers: {
@@ -47,7 +47,7 @@ class Clients extends Component {
         .then((responseData)=> {
 
            this.setState({
-             dataSource: that.state.dataSource.cloneWithRows(responseData),
+             dataSource: this.state.dataSource.cloneWithRows(responseData),
              showProgress: false
            });
        })
