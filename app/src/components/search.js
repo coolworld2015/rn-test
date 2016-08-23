@@ -84,7 +84,6 @@ class Search extends Component {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#F5FCFF',
-        paddingTop: 40,
         padding: 10,
         alignItems: 'center',
         flex: 1,

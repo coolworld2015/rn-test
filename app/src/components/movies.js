@@ -48,6 +48,7 @@ class Movies extends Component {
 						 console.log(responseData.results)
              this.setState({
                dataSource: this.state.dataSource.cloneWithRows(responseData.results),
+               resultsCount: responseData.results.length,
                showProgress: false
              });
        })
@@ -99,10 +100,20 @@ class Movies extends Component {
         );
       }
         return (
-          <ListView style={{marginTop: 65}}
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow.bind(this)}
-  				/>
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{marginTop: 60}}>
+              <Text style={styles.countHeader}>
+              	Have founded {this.state.resultsCount} items.
+              </Text>
+            </View>
+
+            <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+              <ListView
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow.bind(this)}
+              />
+    				</ScrollView>
+  			  </View>
       )
 	}
 }
@@ -117,6 +128,12 @@ const styles = StyleSheet.create({
       borderColor: '#D7D7D7',
       borderBottomWidth: 1,
       backgroundColor: '#fff'
+    },
+    countHeader: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 15,
+      backgroundColor: '#F5FCFF',
     },
     img: {
       height: 100,

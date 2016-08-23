@@ -48,7 +48,8 @@ class Clients extends Component {
 
            this.setState({
              dataSource: this.state.dataSource.cloneWithRows(responseData),
-             showProgress: false
+             resultsCount: responseData.length,
+             showProgress: false,
            });
        })
     }
@@ -100,10 +101,20 @@ class Clients extends Component {
         );
       }
         return (
-          <ListView style={{marginTop: 65}}
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow.bind(this)}
-  		  />
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{marginTop: 60}}>
+              <Text style={styles.countHeader}>
+              	Have founded {this.state.resultsCount} items.
+              </Text>
+            </View>
+
+            <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+              <ListView
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow.bind(this)}
+              />
+    				</ScrollView>
+  			  </View>
       )
 	}
 }
@@ -114,6 +125,12 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: '#F5FCFF',
+    },
+    countHeader: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 15,
       backgroundColor: '#F5FCFF',
     },
     welcome: {
