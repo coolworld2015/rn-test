@@ -103,7 +103,7 @@ class Movies extends Component {
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{marginTop: 60}}>
               <Text style={styles.countHeader}>
-              	Have founded {this.state.resultsCount} items.
+                  {this.state.resultsCount} entries were found.
               </Text>
             </View>
 

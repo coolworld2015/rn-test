@@ -73,7 +73,7 @@ class Search extends Component {
     onSearchPressed(){
         this.props.navigator.push({
             component: Movies,
-            title: 'Results for ' + this.state.searchQuery,
+            title: this.state.searchQuery,
             passProps: {
                 searchQuery: this.state.searchQuery
             }
