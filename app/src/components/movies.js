@@ -58,7 +58,7 @@ class Movies extends Component {
 
     pressRow(rowData){
         this.props.navigator.push({
-            title: rowData.name,
+            title: rowData.trackName,
             component: MoviesDetails,
             passProps: {
                 pushEvent: rowData
@@ -74,7 +74,7 @@ class Movies extends Component {
           	>
             <View style={styles.imgsList}>
               <Image
-                  source={{uri: rowData.artworkUrl100}}
+                  source={{uri: rowData.artworkUrl100.replace('100x100bb.jpg', '500x500bb.jpg')}}
                   style={styles.img}
               />
                 <View>
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#F5FCFF',
     },
     img: {
-      height: 100,
+      height: 150,
       width: 100,
       borderRadius: 20,
       margin: 20

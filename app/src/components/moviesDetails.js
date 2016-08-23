@@ -36,9 +36,9 @@ class MoviesDetails extends Component {
         }}>
 
        <Image
-        source={{uri: this.state.pushEvent.artworkUrl100}}
+        source={{uri: this.state.pushEvent.artworkUrl100.replace('100x100bb.jpg', '500x500bb.jpg')}}
         style={{
-           height: 200,
+           height: 300,
            width: 200,
            borderRadius: 20,
            margin: 20
