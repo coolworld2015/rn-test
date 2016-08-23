@@ -156,7 +156,7 @@ class Login extends Component {
                 <Image style={styles.logo} 
           				source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
           			/>
-                <Text style={styles.heading}>RX-Base</Text>
+                <Text style={styles.heading}>RX-Test</Text>
                 <TextInput
                     onChangeText={(text)=> this.setState({username: text})}
                     style={styles.loginInput}
@@ -195,13 +195,13 @@ class Clients extends Component {
         var ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 != r2
         });
-      
+
         var items = [];
         this.state = {
             dataSource: ds.cloneWithRows(items),
             showProgress: true
         };
-      
+
       	this.getClients();
     }
 
@@ -215,14 +215,15 @@ class Clients extends Component {
           })
  				.then((response)=> response.json())
         .then((responseData)=> {
-         
+
            this.setState({
              dataSource: this.state.dataSource.cloneWithRows(responseData),
-             showProgress: false
+             resultsCount: responseData.length,
+             showProgress: false,
            });
        })
     }
-  
+
     pressRow(rowData){
         this.props.navigator.push({
             title: rowData.name,
@@ -232,7 +233,7 @@ class Clients extends Component {
             }
         });
     }
-  
+
     renderRow(rowData){
         return (
           	<TouchableHighlight
@@ -252,7 +253,7 @@ class Clients extends Component {
                   {rowData.name}
               </Text>
             </View>
-          </TouchableHighlight>    
+          </TouchableHighlight>
         );
     }
 
@@ -270,10 +271,20 @@ class Clients extends Component {
         );
       }
         return (
-          <ListView style={{marginTop: 65}}
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow.bind(this)} 
-  		  />
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{marginTop: 60}}>
+              <Text style={styles.countHeader}>
+              	{this.state.resultsCount} entries were found.
+              </Text>
+            </View>
+
+            <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+              <ListView
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow.bind(this)}
+              />
+    				</ScrollView>
+  			  </View>
       )
 	}
 }
@@ -320,8 +331,6 @@ class ClientDetails extends Component {
     );
   }
 }
-
-
 
 class Collection extends Component {
     constructor(props){
@@ -654,7 +663,7 @@ class Movies extends Component {
         <View style={{flex: 1, justifyContent: 'center'}}>
           <View style={{marginTop: 60}}>
             <Text style={styles.countHeader}>
-            	Have founded {this.state.resultsCount} items.
+            	{this.state.resultsCount} entries were found.
             </Text>
           </View>
 
