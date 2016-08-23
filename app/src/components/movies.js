@@ -16,6 +16,8 @@ import {
     TextInput
 } from 'react-native';
 
+import MoviesDetails from './moviesDetails';
+
 class Movies extends Component {
     constructor(props){
         super(props);
@@ -57,7 +59,7 @@ class Movies extends Component {
     pressRow(rowData){
         this.props.navigator.push({
             title: rowData.name,
-            component: CollectionDetails,
+            component: MoviesDetails,
             passProps: {
                 pushEvent: rowData
             }

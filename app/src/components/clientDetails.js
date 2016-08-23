@@ -27,17 +27,18 @@ class ClientDetails extends Component {
 
   render() {
     return (
-      <View style={{
-          flex: 1,
-          paddingTop: 80,
-          justifyContent: 'flex-start',
-          alignItems: 'center'
-      }}>
+      <ScrollView>
+        <View style={{
+            flex: 1,
+            paddingTop: 20,
+            justifyContent: 'flex-start',
+            alignItems: 'center'
+        }}>
 
         <Text style={styles.welcome}>
           {this.state.pushEvent.name}
         </Text>
-        
+
         <Text style={styles.welcome}>
           {this.state.pushEvent.id}
         </Text>
@@ -54,7 +55,8 @@ class ClientDetails extends Component {
           {this.state.pushEvent.description}
         </Text>
 
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 }

@@ -16,7 +16,7 @@ import {
     TextInput
 } from 'react-native';
 
-class CollectionDetails extends Component {
+class MoviesDetails extends Component {
     constructor(props){
         super(props);
 
@@ -35,27 +35,31 @@ class CollectionDetails extends Component {
             alignItems: 'center'
         }}>
 
-	   <Image
-		  source={{uri: this.state.pushEvent.pic}}
-		  style={{
-				 height: 200,
-				 width: 200,
-				 borderRadius: 20,
-				 margin: 20
-				}}
-		/>
+       <Image
+        source={{uri: this.state.pushEvent.artworkUrl100}}
+        style={{
+           height: 200,
+           width: 200,
+           borderRadius: 20,
+           margin: 20
+          }}
+      />
 
-        <Text style={styles.welcome}>
-          {this.state.pushEvent.name}
-        </Text>
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.trackName}
+          </Text>
 
-        <Text style={styles.welcome}>
-          {this.state.pushEvent.id}
-        </Text>
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.country}
+          </Text>
 
-        <Text style={styles.welcome}>
-          {this.state.pushEvent.description}
-        </Text>
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.primaryGenreName}
+          </Text>
+
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.artistName}
+          </Text>
 
         </View>
       </ScrollView>
@@ -124,4 +128,4 @@ const styles = StyleSheet.create({
     }
 });
 
-module.exports = CollectionDetails;
+module.exports = MoviesDetails;
