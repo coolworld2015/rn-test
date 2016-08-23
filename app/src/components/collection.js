@@ -48,7 +48,8 @@ class Collection extends Component {
 
   		   this.setState({
     			 dataSource: this.state.dataSource.cloneWithRows(responseData),
-    			 showProgress: false
+           resultsCount: responseData.length,
+           showProgress: false
   		   });
        })
     }
@@ -97,10 +98,20 @@ class Collection extends Component {
         );
       }
         return (
-          <ListView style={{marginTop: 65}}
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow.bind(this)}
-  				/>
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{marginTop: 60}}>
+              <Text style={styles.countHeader}>
+                {this.state.resultsCount} entries were found.
+              </Text>
+            </View>
+
+            <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+              <ListView
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow.bind(this)}
+              />
+        	</ScrollView>
+        </View>
       )
 	}
 }
@@ -114,6 +125,12 @@ const styles = StyleSheet.create({
       borderColor: '#D7D7D7',
       borderBottomWidth: 1,
       backgroundColor: '#fff'
+    },
+    countHeader: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 15,
+      backgroundColor: '#F5FCFF',
     },
     img: {
       height: 100,
