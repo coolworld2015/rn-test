@@ -285,7 +285,7 @@ class Clients extends Component {
               />
     				</ScrollView>
   			  </View>
-      )
+      );
 	}
 }
 
@@ -300,34 +300,36 @@ class ClientDetails extends Component {
 	
   render() {
     return (
-      <View style={{
-          flex: 1,
-          paddingTop: 80,
-          justifyContent: 'flex-start',
-          alignItems: 'center'
-      }}>
- 
-        <Text style={styles.welcome}>
-          {this.state.pushEvent.id}
-        </Text>
+      <ScrollView>
+        <View style={{
+            flex: 1,
+            paddingTop: 20,
+            justifyContent: 'flex-start',
+            alignItems: 'center'
+        }}>
 
         <Text style={styles.welcome}>
           {this.state.pushEvent.name}
         </Text>
 
         <Text style={styles.welcome}>
+          {this.state.pushEvent.id}
+        </Text>
+
+        <Text style={styles.welcome}>
           {this.state.pushEvent.address}
-        </Text>      
+        </Text>
 
         <Text style={styles.welcome}>
           {this.state.pushEvent.cv}
-        </Text>         
+        </Text>
 
         <Text style={styles.welcome}>
           {this.state.pushEvent.description}
-        </Text>  
- 
-      </View>
+        </Text>
+
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -449,18 +451,19 @@ class CollectionDetails extends Component {
 
         this.state = {
             pushEvent: props.pushEvent
-        };
+        }
     }
 	
   render() {
     return (
-      <View style={{
-          flex: 1,
-          paddingTop: 80,
-          justifyContent: 'flex-start',
-          alignItems: 'center'
-      }}>
-	  
+      <ScrollView>
+        <View style={{
+            flex: 1,
+            paddingTop: 20,
+            justifyContent: 'flex-start',
+            alignItems: 'center'
+        }}>
+
 	   <Image
 		  source={{uri: this.state.pushEvent.pic}}
 		  style={{
@@ -470,20 +473,21 @@ class CollectionDetails extends Component {
 				 margin: 20
 				}}
 		/>
-			  
+
         <Text style={styles.welcome}>
           {this.state.pushEvent.name}
         </Text>
 
         <Text style={styles.welcome}>
           {this.state.pushEvent.id}
-        </Text>         
+        </Text>
 
         <Text style={styles.welcome}>
           {this.state.pushEvent.description}
-        </Text>  
- 
-      </View>
+        </Text>
+
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -615,7 +619,7 @@ class Movies extends Component {
           	>
             <View style={styles.imgsList}>
               <Image
-                  source={{uri: rowData.artworkUrl100}}
+                  source={{uri: rowData.artworkUrl100.replace('100x100bb.jpg', '500x500bb.jpg')}}
                   style={styles.img}
               />
                 <View> 
@@ -682,9 +686,9 @@ class MoviesDetails extends Component {
         }}>
 
        <Image
-        source={{uri: this.state.pushEvent.artworkUrl100}}
+        source={{uri: this.state.pushEvent.artworkUrl100.replace('100x100bb.jpg', '500x500bb.jpg')}}
         style={{
-           height: 200,
+           height: 300,
            width: 200,
            borderRadius: 20,
            margin: 20
