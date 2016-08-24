@@ -119,11 +119,21 @@ class AppContainer extends Component {
                     style={{
                         flex: 1
                     }}
+                    ref="nav"
                     initialRoute={{
                         component: Search,
-                        title: 'Search'
-                    }}
-                />
+                        title: 'Search',
+                        leftButtonTitle: 'Add',          
+                        rightButtonTitle: 'New',
+                        onRightButtonPress: () => {
+                        this.refs.nav.navigator.push({
+                          title: "Collection",
+                          component: Collection,
+                          rightButtonTitle: 'Cancel',
+                          onRightButtonPress: () => { this.refs.nav.navigator.pop(); }
+                        });}
+                		}}
+               />
             </TabBarIOS.Item>
         
         </TabBarIOS>
@@ -214,7 +224,8 @@ class Login extends Component {
                     style={styles.loginInput}
                     placeholder="Password" secureTextEntry={true}></TextInput>
                 <TouchableHighlight
-                    onPress={()=> this.onLoginPressed()}
+                    onPress={this.onLoginPressed.bind(this)}
+                    //onPress={()=> this.getUser()}
                     style={styles.button}>
                     <Text style={styles.buttonText}>Log in</Text>
                 </TouchableHighlight>
@@ -232,7 +243,7 @@ class Login extends Component {
     }
 
     onLoginPressed(){
-				this.getUser();
+				this.props.onLogin();
     }
 }
 
