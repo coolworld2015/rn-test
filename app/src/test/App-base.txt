@@ -80,9 +80,9 @@ class AppContainer extends Component {
             <TabBarIOS.Item
                 title="Clients"
                 selected={this.state.selectedTab == 'Clients'}
-        				onPress={()=> this.setState({selectedTab: 'Clients'})}
-  					>
-                <NavigatorIOS
+        				onPress={()=> this.setState({selectedTab: 'Clients'})}>
+
+        				<NavigatorIOS
                     style={{
                         flex: 1
                     }}
@@ -92,12 +92,12 @@ class AppContainer extends Component {
                     }}
                 />
             </TabBarIOS.Item>
-        
+                
             <TabBarIOS.Item
                 title="Collection"
                 selected={this.state.selectedTab == 'Collection'}
-        				onPress={()=> this.setState({selectedTab: 'Collection'})}
-  					>
+        				onPress={()=> this.setState({selectedTab: 'Collection'})}>
+
                 <NavigatorIOS
                     style={{
                         flex: 1
@@ -110,10 +110,25 @@ class AppContainer extends Component {
             </TabBarIOS.Item>
                 
             <TabBarIOS.Item
+                title="Phones"
+                selected={this.state.selectedTab == 'Phones'}
+        				onPress={()=> this.setState({selectedTab: 'Phones'})}>
+
+                <NavigatorIOS
+                    style={{
+                        flex: 1
+                    }}
+                    initialRoute={{
+                        component: Phones,
+                        title: 'Phones'
+                    }}
+                />
+            </TabBarIOS.Item>
+                
+            <TabBarIOS.Item
                 title="Search"
                 selected={this.state.selectedTab == 'Search'}
-                onPress={()=> this.setState({selectedTab: 'Search'})}
-             >
+                onPress={()=> this.setState({selectedTab: 'Search'})}>
  
                 <NavigatorIOS
                     style={{
@@ -794,6 +809,160 @@ class MoviesDetails extends Component {
   }
 }
 
+class Phones extends Component {
+    constructor(props){
+        super(props);
+
+        var ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 != r2
+        });
+
+        var items = [];
+        this.state = {
+            dataSource: ds.cloneWithRows(items),
+            showProgress: true
+        };
+
+      	this.getClients();
+    }
+
+    getClients(){
+       fetch('http://ui-base.herokuapp.com/api/items/get', {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+ 				.then((response)=> response.json())
+        .then((responseData)=> {
+
+           this.setState({
+             dataSource: this.state.dataSource.cloneWithRows(responseData),
+             resultsCount: responseData.length,
+             showProgress: false,
+           });
+       })
+    }
+
+    pressRow(rowData){
+        this.props.navigator.push({
+            title: rowData.name,
+            component: PhoneDetails,
+            passProps: {
+                pushEvent: rowData
+            }
+        });
+    }
+
+    renderRow(rowData){
+        return (
+          	<TouchableHighlight
+                onPress={()=> this.pressRow(rowData)}
+                underlayColor='#ddd'
+          	>
+            <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 20,
+                alignItems: 'center',
+                borderColor: '#D7D7D7',
+                borderBottomWidth: 1,
+                backgroundColor: '#fff'
+            }}>
+              <Text style={{backgroundColor: '#fff'}}>
+                  {rowData.name} - {rowData.phone}
+              </Text>
+            </View>
+          </TouchableHighlight>
+        );
+    }
+
+    render(){
+      if(this.state.showProgress){
+        return (
+            <View style={{
+                flex: 1,
+                justifyContent: 'center'
+            }}>
+                <ActivityIndicatorIOS
+                    size="large"
+                    animating={true} />
+            </View>
+        );
+      }
+        return (
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{marginTop: 60}}>
+              <Text style={styles.countHeader}>
+              	{this.state.resultsCount} entries were found.
+              </Text>
+            </View>
+
+            <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+              <ListView
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow.bind(this)}
+              />
+    				</ScrollView>
+  			  </View>
+      );
+	}
+}
+
+class PhoneDetails extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            pushEvent: props.pushEvent
+        };
+    }
+	
+  render() {
+    return (
+      <ScrollView>
+        <View style={{
+            flex: 1,
+            paddingTop: 20,
+            justifyContent: 'flex-start',
+            alignItems: 'center'
+        }}>
+
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.name}
+          </Text>
+
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.id}
+          </Text>
+
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.phone}
+          </Text>
+
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.street}
+          </Text>
+
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.house}
+          </Text>
+
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.apt}
+          </Text>
+
+          <Text style={styles.welcome}>
+            {this.state.pushEvent.index}
+          </Text>
+      
+        </View>
+      </ScrollView>
+    );
+  }
+}
+
 const styles = StyleSheet.create({
     AppContainer: {
       flex: 1,
@@ -813,7 +982,7 @@ const styles = StyleSheet.create({
       margin: 20,
     },
     container: {
-        backgroundColor: '#F5FCFF',
+        //backgroundColor: '#F5FCFF',
         paddingTop: 40,
         padding: 10,
         alignItems: 'center',
