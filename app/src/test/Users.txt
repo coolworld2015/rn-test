@@ -21,7 +21,7 @@ class AppContainer extends Component {
         super(props);
 
         this.state = {
-            selectedTab: 'Phones'
+            selectedTab: 'Users'
         }
     }
  
@@ -47,12 +47,39 @@ class AppContainer extends Component {
                             title: "Search",
                             component: PhoneSearch,
                             rightButtonTitle: 'Cancel',
-                            onRightButtonPress: () => { this.refs.phones.navigator.pop(); }
+                            onRightButtonPress: () => { 
+                                  this.refs.phones.navigator.pop(); }
                           });
 												}          
                     }}
                 />
             </TabBarIOS.Item>
+                
+             <TabBarIOS.Item
+                  title="Users"
+                  selected={this.state.selectedTab == 'Users'}
+          				 onPress={()=> this.setState({selectedTab: 'Users'})}>
+
+                  <NavigatorIOS
+                      style={{
+                          flex: 1
+                      }}
+                      ref="users"
+                      initialRoute={{
+                          component: Users,
+                          title: 'Users',
+                          rightButtonTitle: 'Add',
+                          onRightButtonPress: () => {
+                              this.refs.users.navigator.push({
+                                  title: "Add user",
+                                  component: UserAdd,
+                                  rightButtonTitle: 'Cancel',
+                                  onRightButtonPress: () => { 			                                                            this.refs.users.navigator.pop(); }
+                                });
+  												}
+                      }}
+                  />
+              </TabBarIOS.Item>                
         </TabBarIOS>
       );
     }
@@ -409,41 +436,298 @@ class PhoneSearchResults extends Component {
   }
 }
 
-class Search extends Component {
+class Users extends Component {
+    constructor(props){
+        super(props);
+
+        var ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 != r2
+        });
+
+        var items = [];
+        this.state = {
+            dataSource: ds.cloneWithRows(items),
+            showProgress: true,
+          	resultsCount: 0
+        };
+
+      	this.getUsers();
+    }
+
+    getUsers(){
+       fetch('http://ui-base.herokuapp.com/api/users/get', {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+ 				.then((response)=> response.json())
+        .then((responseData)=> {
+
+           this.setState({
+             dataSource: this.state.dataSource.cloneWithRows(responseData),
+             resultsCount: responseData.length
+           });
+       })
+         .catch((error)=> {
+             this.setState({
+               serverError: true
+             });
+       })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+ 				});
+    }
+
+    pressRow(rowData){
+        this.props.navigator.push({
+            title: rowData.name,
+            component: UserDetails,
+ 
+            rightButtonTitle: 'Delete',
+            onRightButtonPress: () => { 
+              this.props.navigator.pop(); 
+            },
+ 
+            passProps: {
+                pushEvent: rowData
+            }
+        });
+    }
+
+    renderRow(rowData){
+        return (
+          	<TouchableHighlight
+                onPress={()=> this.pressRow(rowData)}
+                underlayColor='#ddd'
+          	>
+            <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 20,
+                alignItems: 'center',
+                borderColor: '#D7D7D7',
+                borderBottomWidth: 1,
+                backgroundColor: '#fff'
+            }}>
+              <Text style={{backgroundColor: '#fff'}}>
+                  {rowData.name}
+              </Text>
+            </View>
+          </TouchableHighlight>
+        );
+    }
+
+    render(){
+      var errorCtrl = <View />;
+
+        if(this.state.serverError){
+            errorCtrl = <Text style={styles.error}>
+                Something went wrong.
+            </Text>;
+        }
+
+      if(this.state.showProgress){
+        return (
+            <View style={{
+                flex: 1,
+                justifyContent: 'center'
+            }}>
+                <ActivityIndicatorIOS
+                    size="large"
+                    animating={true} />
+            </View>
+        );
+      }
+        return (
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{marginTop: 60}}>
+              <Text style={styles.countHeader}>
+              	{this.state.resultsCount} entries were found.
+              </Text>
+
+          	{errorCtrl}
+
+            </View>
+
+            <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+              <ListView
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow.bind(this)}
+              />
+    				</ScrollView>
+  			  </View>
+      );
+	}
+}
+
+class UserDetails extends Component {
     constructor(props){
         super(props);
 
         this.state = {
-            showProgress: false
+            pushEvent: props.pushEvent,
+            name: props.pushEvent.name,
+            pass: props.pushEvent.pass,
+            description: props.pushEvent.description
+        };
+    }
+
+  render() {
+    return (
+      <ScrollView>
+        <View style={{
+            flex: 1,
+            paddingTop: 0,
+            justifyContent: 'flex-start'
+        }}>
+      
+      <Text style={{
+          fontSize: 24,
+      		textAlign: 'center',
+      		marginTop: 10,
+      }}>
+      		{this.state.name}
+      </Text>
+      
+      <TextInput
+        onChangeText={(text)=> this.setState({name: text})}
+        style={styles.loginInput}
+        value={this.state.name}
+        placeholder="Name">
+      </TextInput>
+        
+      <TextInput
+        style={styles.loginInput}
+        value={this.state.pushEvent.id}>
+      </TextInput>
+        
+      <TextInput
+        onChangeText={(text)=> this.setState({name: text})}
+        style={styles.loginInput}
+        value={this.state.pass}
+        placeholder="Password">
+      </TextInput>
+        
+      <TextInput
+        onChangeText={(text)=> this.setState({name: text})}
+        style={styles.loginInput}
+        value={this.state.description}
+        placeholder="Description">
+      </TextInput>
+          
+      <TouchableHighlight
+        //onPress={this.onLoginPressed.bind(this)}
+        //onPress={()=> this.addUser()}
+        style={styles.button}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableHighlight>   
+          
+        </View>
+      </ScrollView>
+    );
+  }
+}
+
+class UserAdd extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            showProgress: false,
+          	name: 'ed'
         }
     }
 
-    render(){
-	    var errorCtrl = <View />;
+    addUser(){
+           this.setState({
+             showProgress: true
+           });
 
-        if(this.state.serverError){
+      console.log('starting geting user...');
+ 			fetch('http://ui-warehouse.herokuapp.com/api/users/findByName/'
+       + 	this.state.username, {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+ 				.then((response)=> response.json())
+        .then((responseData)=> {
+
+   				if (this.state.password == responseData.pass) {
+
+               this.setState({
+                 badCredentials: false
+               });
+
+            	this.props.onLogin().bind(this);
+
+          } else {
+             	this.setState({
+                 badCredentials: true
+             });
+          }
+       })
+         .catch((error)=> {
+             this.setState({
+               badCredentials: true
+             });
+       })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+ 				});
+    }
+
+    render(){
+        var errorCtrl = <View />;
+
+        if(!this.state.success && this.state.badCredentials){
             errorCtrl = <Text style={styles.error}>
-                Something went wrong. 
+                That username and password combination did not work
+            </Text>;
+        }
+
+        if(!this.state.success && this.state.unknownError){
+            errorCtrl = <Text style={styles.error}>
+                We experienced an unexpected issue
             </Text>;
         }
 
         return (
           <ScrollView>
-            <View style={{marginTop: 20}}>
-          			<TouchableHighlight
-                    style={styles.button}>
-                    <Text style={styles.buttonText}>Search phones</Text>
-                </TouchableHighlight>
-          			<TextInput
-                    onChangeText={(text)=> this.setState({searchQuery: text})}
+            <View style={{marginTop: 0}}>
+                <Text style={{
+                    fontSize: 24,
+                    textAlign: 'center',
+                    marginTop: 10}}>
+          				Add user
+                </Text>
+          
+                <TextInput
+                    onChangeText={(text)=> this.setState({name: text})}
                     style={styles.loginInput}
-                    placeholder="Search phones">
-                </TextInput>
+                    placeholder="Name"></TextInput>
+                <TextInput
+                    onChangeText={(text)=> this.setState({pass: text})}
+                    style={styles.loginInput}
+                    placeholder="Password"></TextInput>
+                <TextInput
+                    onChangeText={(text)=> this.setState({description: text})}
+                    style={styles.loginInput}
+                    placeholder="Description"></TextInput>
                     
                 <TouchableHighlight
-                    onPress={this.onSearchPressed.bind(this)}
+                    //onPress={this.onLoginPressed.bind(this)}
+                    //onPress={()=> this.addUser()}
                     style={styles.button}>
-                    <Text style={styles.buttonText}>Search</Text>
+                    <Text style={styles.buttonText}>Submit</Text>
                 </TouchableHighlight>
 
                 {errorCtrl}
@@ -454,19 +738,12 @@ class Search extends Component {
                     style={styles.loader}
                  />
             </View>
-         </ScrollView>        
+          </ScrollView>
         )
     }
 
-    onSearchPressed(){
-        this.props.navigator.push({
-            component: PhoneSearchResults,
-            title: this.state.searchQuery,
-            passProps: {
-                searchQuery: this.state.searchQuery
-            }
-        });
-
+    onLoginPressed(){
+				this.props.onLogin();
     }
 }
 
