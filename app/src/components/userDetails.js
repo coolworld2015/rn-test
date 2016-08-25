@@ -16,7 +16,7 @@ import {
     TextInput
 } from 'react-native';
 
-class PhoneDetails extends Component {
+class UserDetails extends Component {
     constructor(props){
         super(props);
 
@@ -32,36 +32,24 @@ class PhoneDetails extends Component {
             flex: 1,
             paddingTop: 20,
             justifyContent: 'flex-start',
-            alignItems: 'flex-start'
+            alignItems: 'center'
         }}>
 
-          <Text style={styles.welcome}>
-            Name: {this.state.pushEvent.name}
-          </Text>
+        <Text style={styles.welcome}>
+          Name: {this.state.pushEvent.name}
+        </Text>
 
-          <Text style={styles.welcome}>
-            ID: {this.state.pushEvent.id}
-          </Text>
+        <Text style={styles.welcome}>
+          ID: {this.state.pushEvent.id}
+        </Text>
 
-          <Text style={styles.welcome}>
-            Phone: {this.state.pushEvent.phone}
-          </Text>
+        <Text style={styles.welcome}>
+          Password: {this.state.pushEvent.pass}
+        </Text>
 
-          <Text style={styles.welcome}>
-            Str: {this.state.pushEvent.street}
-          </Text>
-
-          <Text style={styles.welcome}>
-            House: {this.state.pushEvent.house}
-          </Text>
-
-          <Text style={styles.welcome}>
-            Apt: {this.state.pushEvent.apt}
-          </Text>
-
-          <Text style={styles.welcome}>
-            Zip: {this.state.pushEvent.index}
-          </Text>
+        <Text style={styles.welcome}>
+          Description: {this.state.pushEvent.description}
+        </Text>
 
         </View>
       </ScrollView>
@@ -130,4 +118,4 @@ const styles = StyleSheet.create({
     }
 });
 
-module.exports = PhoneDetails;
+module.exports = UserDetails;

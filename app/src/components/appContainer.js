@@ -22,13 +22,14 @@ import Collection from './collection';
 import Search from './search';
 import Phones from './phones';
 import PhoneSearch from './phoneSearch';
+import Users from './users';
 
 class AppContainer extends Component {
     constructor(props){
         super(props);
 
         this.state = {
-            selectedTab: 'Phones'
+            selectedTab: 'Users'
         }
     }
 
@@ -76,22 +77,48 @@ class AppContainer extends Component {
                      style={{
                          flex: 1
                      }}
-                     ref="nav"
+                     ref="phones"
                      initialRoute={{
                          component: Phones,
                          title: 'Phones',
                          rightButtonTitle: 'Search',
                          onRightButtonPress: () => {
-                         this.refs.nav.navigator.push({
-                             title: "Search",
-                             component: PhoneSearch,
-                             rightButtonTitle: 'Cancel',
-                             onRightButtonPress: () => { this.refs.nav.navigator.pop(); }
-                           });
+                             this.refs.phones.navigator.push({
+                                 title: "Search",
+                                 component: PhoneSearch,
+                                 rightButtonTitle: 'Cancel',
+                                 onRightButtonPress: () => { this.refs.phones.navigator.pop(); }
+                               });
  												}
                      }}
                  />
              </TabBarIOS.Item>
+
+             <TabBarIOS.Item
+                  title="Users"
+                  selected={this.state.selectedTab == 'Users'}
+          				 onPress={()=> this.setState({selectedTab: 'Users'})}>
+
+                  <NavigatorIOS
+                      style={{
+                          flex: 1
+                      }}
+                      ref="users"
+                      initialRoute={{
+                          component: Users,
+                          title: 'Users',
+                          leftButtonTitle: 'Add',
+                          onLeftButtonPress: () => {
+                              this.refs.users.navigator.push({
+                                  title: "Search",
+                                  component: PhoneSearch,
+                                  rightButtonTitle: 'Cancel',
+                                  onRightButtonPress: () => { this.refs.users.navigator.pop(); }
+                                });
+  												}
+                      }}
+                  />
+              </TabBarIOS.Item>
 
             <TabBarIOS.Item
                 title="Search"
@@ -102,19 +129,20 @@ class AppContainer extends Component {
                     style={{
                         flex: 1
                     }}
-                    ref="nav"
+                    ref="search"
                     initialRoute={{
                         component: Search,
                         title: 'Search',
                         leftButtonTitle: 'Add',
                         rightButtonTitle: 'New',
                         onRightButtonPress: () => {
-                        this.refs.nav.navigator.push({
-                          title: "Collection",
-                          component: Collection,
-                          rightButtonTitle: 'Cancel',
-                          onRightButtonPress: () => { this.refs.nav.navigator.pop(); }
-                        });}
+                            this.refs.search.navigator.push({
+                              title: "Collection",
+                              component: Collection,
+                              rightButtonTitle: 'Cancel',
+                              onRightButtonPress: () => { this.refs.search.navigator.pop(); }
+                            });
+                       }
                 		}}
                />
             </TabBarIOS.Item>
