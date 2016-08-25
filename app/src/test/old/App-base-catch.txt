@@ -897,8 +897,9 @@ class Phones extends Component {
         .then((responseData)=> {
 
            this.setState({
-             dataSource: this.state.dataSource.cloneWithRows(responseData),
-             resultsCount: responseData.length
+             dataSource: this.state.dataSource.cloneWithRows(responseData.splice(0,10)),
+             //resultsCount: responseData.length
+             resultsCount: 10
            })
        })
          .catch((error)=> {
@@ -1005,37 +1006,33 @@ class PhoneDetails extends Component {
             flex: 1,
             paddingTop: 20,
             justifyContent: 'flex-start',
-            alignItems: 'center'
+            alignItems: 'flex-start'
         }}>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.name}
+            Name: {this.state.pushEvent.name}
           </Text>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.id}
+            ID: {this.state.pushEvent.id}
           </Text>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.phone}
+            Phone: {this.state.pushEvent.phone}
           </Text>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.street}
+            Address: {this.state.pushEvent.street} {this.state.pushEvent.house}
           </Text>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.house}
+            Apt: {this.state.pushEvent.apt}
           </Text>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.apt}
+            Zip: {this.state.pushEvent.index}
           </Text>
 
-          <Text style={styles.welcome}>
-            {this.state.pushEvent.index}
-          </Text>
-      
         </View>
       </ScrollView>
     );
