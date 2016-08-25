@@ -21,13 +21,14 @@ import Clients from './clients';
 import Collection from './collection';
 import Search from './search';
 import Phones from './phones';
+import PhoneSearch from './phoneSearch';
 
 class AppContainer extends Component {
     constructor(props){
         super(props);
 
         this.state = {
-            selectedTab: 'Search'
+            selectedTab: 'Phones'
         }
     }
 
@@ -67,20 +68,30 @@ class AppContainer extends Component {
             </TabBarIOS.Item>
 
             <TabBarIOS.Item
-                title="Phones"
-                selected={this.state.selectedTab == 'Phones'}
-        				onPress={()=> this.setState({selectedTab: 'Phones'})}>
+                 title="Phones"
+                 selected={this.state.selectedTab == 'Phones'}
+         				 onPress={()=> this.setState({selectedTab: 'Phones'})}>
 
-                <NavigatorIOS
-                    style={{
-                        flex: 1
-                    }}
-                    initialRoute={{
-                        component: Phones,
-                        title: 'Phones'
-                    }}
-                />
-            </TabBarIOS.Item>
+                 <NavigatorIOS
+                     style={{
+                         flex: 1
+                     }}
+                     ref="nav"
+                     initialRoute={{
+                         component: Phones,
+                         title: 'Phones',
+                         rightButtonTitle: 'Search',
+                         onRightButtonPress: () => {
+                         this.refs.nav.navigator.push({
+                             title: "Phone search",
+                             component: PhoneSearch,
+                             rightButtonTitle: 'Cancel',
+                             onRightButtonPress: () => { this.refs.nav.navigator.pop(); }
+                           });
+ 												}
+                     }}
+                 />
+             </TabBarIOS.Item>
 
             <TabBarIOS.Item
                 title="Search"

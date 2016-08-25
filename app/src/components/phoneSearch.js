@@ -16,9 +16,9 @@ import {
     TextInput
 } from 'react-native';
 
-import Movies from './movies';
+import ClientDetails from './clientDetails';
 
-class Search extends Component {
+class PhoneSearch extends Component {
     constructor(props){
         super(props);
 
@@ -59,18 +59,19 @@ class Search extends Component {
 
     onSearchPressed(){
         this.props.navigator.push({
-            component: Movies,
+            component: PhoneSearchResults,
             title: this.state.searchQuery,
             passProps: {
                 searchQuery: this.state.searchQuery
             }
         });
+
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        //ackgroundColor: '#F5FCFF',
+        //backgroundColor: '#F5FCFF',
         padding: 10,
         alignItems: 'center',
         flex: 1,
@@ -109,4 +110,4 @@ const styles = StyleSheet.create({
     }
 });
 
-module.exports = Search;
+module.exports = PhoneSearch;

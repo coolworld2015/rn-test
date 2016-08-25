@@ -135,15 +135,16 @@ const styles = StyleSheet.create({
       margin: 20,
     },
     container: {
-        backgroundColor: '#F5FCFF',
+        //backgroundColor: '#F5FCFF',
         paddingTop: 40,
         padding: 10,
         alignItems: 'center',
         flex: 1
     },
     logo: {
-        width: 66,
-        height: 65
+        width: 150,
+        height: 150,
+        paddingTop: 140
     },
     heading: {
         fontSize: 30,
