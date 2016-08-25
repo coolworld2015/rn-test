@@ -16,7 +16,7 @@ import {
     TextInput
 } from 'react-native';
 
-import ClientDetails from './clientDetails';
+import PhoneSearchResults from './phoneSearchResults';
 
 class PhoneSearch extends Component {
     constructor(props){
@@ -33,12 +33,12 @@ class PhoneSearch extends Component {
             <View style={styles.container}>
           			<TouchableHighlight
                     style={styles.button}>
-                    <Text style={styles.buttonText}>Search movies</Text>
+                    <Text style={styles.buttonText}>Search phones</Text>
                 </TouchableHighlight>
           			<TextInput
                     onChangeText={(text)=> this.setState({searchQuery: text})}
                     style={styles.loginInput}
-                    placeholder="Search movies">
+                    placeholder="Search phones">
                 </TextInput>
 
                 <TouchableHighlight
@@ -71,7 +71,6 @@ class PhoneSearch extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        //backgroundColor: '#F5FCFF',
         padding: 10,
         alignItems: 'center',
         flex: 1,
@@ -106,7 +105,8 @@ const styles = StyleSheet.create({
     },
     error: {
         color: 'red',
-        paddingTop: 10
+        paddingTop: 10,
+        textAlign: 'center'
     }
 });
 

@@ -83,7 +83,7 @@ class AppContainer extends Component {
                          rightButtonTitle: 'Search',
                          onRightButtonPress: () => {
                          this.refs.nav.navigator.push({
-                             title: "Phone search",
+                             title: "Search",
                              component: PhoneSearch,
                              rightButtonTitle: 'Cancel',
                              onRightButtonPress: () => { this.refs.nav.navigator.pop(); }

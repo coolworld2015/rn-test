@@ -18,7 +18,7 @@ import {
 
 import PhoneDetails from './phoneDetails';
 
-class Phones extends Component {
+class PhoneSearchResults extends Component {
     constructor(props){
         super(props);
 
@@ -29,29 +29,31 @@ class Phones extends Component {
         var items = [];
         this.state = {
             dataSource: ds.cloneWithRows(items),
+            searchQuery: props.searchQuery,
             showProgress: true,
-			      resultsCount: 0
+						resultsCount: 0
         };
 
-      	this.getPhones();
+      	this.findByPhone();
     }
 
-    getPhones(){
-       fetch('http://ui-base.herokuapp.com/api/items/get', {
+    findByPhone(){
+       fetch('http://ui-base.herokuapp.com/api/items/findByPhone/'
+             + this.state.searchQuery, {
             method: 'get',
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
             }
           })
- 				.then((response)=> response.json())
-        .then((responseData)=> {
+          .then((response)=> response.json())
+          .then((responseData)=> {
+						 console.log(responseData)
+             this.setState({
+               dataSource: this.state.dataSource.cloneWithRows(responseData),
+               resultsCount: responseData.length
+             });
 
-           this.setState({
-             dataSource: this.state.dataSource.cloneWithRows(responseData.splice(0,10)),
-             //resultsCount: responseData.length
-             resultsCount: 10
-           })
        })
          .catch((error)=> {
              this.setState({
@@ -67,7 +69,7 @@ class Phones extends Component {
 
     pressRow(rowData){
         this.props.navigator.push({
-            title: rowData.name,
+            title: rowData.trackName,
             component: PhoneDetails,
             passProps: {
                 pushEvent: rowData
@@ -119,27 +121,28 @@ class Phones extends Component {
             </View>
         );
       }
-        return (
-          <View style={{flex: 1, justifyContent: 'center'}}>
-            <View style={{marginTop: 60}}>
-              <Text style={styles.countHeader}>
-              	{this.state.resultsCount} entries were found.
-              </Text>
+      return (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <View style={{marginTop: 60}}>
+            <Text style={styles.countHeader}>
+              {this.state.resultsCount} entries were found.
+            </Text>
 
-          	{errorCtrl}
+          {errorCtrl}
 
-            </View>
+          </View>
 
-            <ScrollView style={{marginTop: 0, marginBottom: 60}}>
-              <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this.renderRow.bind(this)}
-              />
-    				</ScrollView>
-  			  </View>
-      );
-	}
+          <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+            <ListView
+              dataSource={this.state.dataSource}
+              renderRow={this.renderRow.bind(this)}
+            />
+          </ScrollView>
+        </View>
+    );
+  }
 }
+
 
 const styles = StyleSheet.create({
     AppContainer: {
@@ -209,4 +212,5 @@ const styles = StyleSheet.create({
     }
 });
 
-module.exports = Phones;
+
+module.exports = PhoneSearchResults;

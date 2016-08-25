@@ -175,6 +175,11 @@ const styles = StyleSheet.create({
       width: 75,
       borderRadius: 20,
       margin: 20
+    },
+    error: {
+        color: 'red',
+        paddingTop: 10,
+        textAlign: 'center'
     }
 });
 

@@ -180,7 +180,8 @@ const styles = StyleSheet.create({
     },
     error: {
         color: 'red',
-        paddingTop: 10
+        paddingTop: 10,
+        textAlign: 'center'
     }
 });
 
