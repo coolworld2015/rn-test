@@ -10,7 +10,7 @@ import {
     TouchableHighlight,
     ListView,
     ScrollView,
-    ActivityIndicatorIOS,
+    ActivityIndicator,
     TabBarIOS,
     NavigatorIOS,
     TextInput
@@ -21,8 +21,51 @@ class Login extends Component {
         super(props);
 
         this.state = {
-            showProgress: false
+            showProgress: false,
         }
+    }
+
+    getUser(){
+           this.setState({
+             showProgress: true
+           });
+
+      console.log('starting geting user...');
+ 			fetch('http://ui-warehouse.herokuapp.com/api/users/findByName/'
+       + 	this.state.username, {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+ 				.then((response)=> response.json())
+        .then((responseData)=> {
+
+   				if (this.state.password == responseData.pass) {
+
+               this.setState({
+                 badCredentials: false
+               });
+
+            	this.props.onLogin().bind(this);
+
+          } else {
+             	this.setState({
+                 badCredentials: true
+             });
+          }
+       })
+         .catch((error)=> {
+             this.setState({
+               badCredentials: true
+             });
+       })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+ 				});
     }
 
     render(){
@@ -41,11 +84,12 @@ class Login extends Component {
         }
 
         return (
+          <ScrollView>
             <View style={styles.container}>
                 <Image style={styles.logo}
           				source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
           			/>
-                <Text style={styles.heading}>RX-Base</Text>
+                <Text style={styles.heading}>RX-Test</Text>
                 <TextInput
                     onChangeText={(text)=> this.setState({username: text})}
                     style={styles.loginInput}
@@ -56,23 +100,24 @@ class Login extends Component {
                     placeholder="Password" secureTextEntry={true}></TextInput>
                 <TouchableHighlight
                     onPress={this.onLoginPressed.bind(this)}
+                    //onPress={()=> this.getUser()}
                     style={styles.button}>
                     <Text style={styles.buttonText}>Log in</Text>
                 </TouchableHighlight>
 
                 {errorCtrl}
 
-                <ActivityIndicatorIOS
+                <ActivityIndicator
                     animating={this.state.showProgress}
                     size="large"
                     style={styles.loader}
                  />
             </View>
+          </ScrollView>
         )
     }
 
     onLoginPressed(){
-        console.log('Attempting to log in with username ' + this.props.onLogin);
 				this.props.onLogin();
     }
 }

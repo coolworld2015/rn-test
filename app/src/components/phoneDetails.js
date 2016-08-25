@@ -16,7 +16,7 @@ import {
     TextInput
 } from 'react-native';
 
-class MoviesDetails extends Component {
+class PhoneDetails extends Component {
     constructor(props){
         super(props);
 
@@ -32,41 +32,31 @@ class MoviesDetails extends Component {
             flex: 1,
             paddingTop: 20,
             justifyContent: 'flex-start',
-            alignItems: 'center'
+            alignItems: 'flex-start'
         }}>
 
-       <Image
-        source={{uri: this.state.pushEvent.artworkUrl100.replace('100x100bb.jpg', '500x500bb.jpg')}}
-        style={{
-           height: 300,
-           width: 200,
-           borderRadius: 20,
-           margin: 20
-          }}
-      />
-
           <Text style={styles.welcome}>
-            {this.state.pushEvent.trackName}
+            Name: {this.state.pushEvent.name}
           </Text>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.releaseDate.split('-')[0]}
+            ID: {this.state.pushEvent.id}
           </Text>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.country}
+            Phone: {this.state.pushEvent.phone}
           </Text>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.primaryGenreName}
+            Address: {this.state.pushEvent.street} {this.state.pushEvent.house}
           </Text>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.artistName}
+            Apt: {this.state.pushEvent.apt}
           </Text>
 
           <Text style={styles.welcome}>
-            {this.state.pushEvent.longDescription}
+            Zip: {this.state.pushEvent.index}
           </Text>
 
         </View>
@@ -136,4 +126,4 @@ const styles = StyleSheet.create({
     }
 });
 
-module.exports = MoviesDetails;
+module.exports = PhoneDetails;

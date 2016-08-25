@@ -29,7 +29,8 @@ class Clients extends Component {
         var items = [];
         this.state = {
             dataSource: ds.cloneWithRows(items),
-            showProgress: true
+            showProgress: true,
+          	resultsCount: 0
         };
 
       	this.getClients();
@@ -48,10 +49,19 @@ class Clients extends Component {
 
            this.setState({
              dataSource: this.state.dataSource.cloneWithRows(responseData),
-             resultsCount: responseData.length,
-             showProgress: false,
+             resultsCount: responseData.length
            });
        })
+         .catch((error)=> {
+             this.setState({
+               serverError: true
+             });
+       })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+ 				});
     }
 
     pressRow(rowData){
@@ -88,6 +98,14 @@ class Clients extends Component {
     }
 
     render(){
+      var errorCtrl = <View />;
+
+        if(this.state.serverError){
+            errorCtrl = <Text style={styles.error}>
+                Something went wrong.
+            </Text>;
+        }
+
       if(this.state.showProgress){
         return (
             <View style={{
@@ -106,6 +124,9 @@ class Clients extends Component {
               <Text style={styles.countHeader}>
               	{this.state.resultsCount} entries were found.
               </Text>
+
+          	{errorCtrl}
+
             </View>
 
             <ScrollView style={{marginTop: 0, marginBottom: 60}}>
@@ -115,10 +136,9 @@ class Clients extends Component {
               />
     				</ScrollView>
   			  </View>
-      )
+      );
 	}
 }
-
 
 const styles = StyleSheet.create({
     AppContainer: {

@@ -29,7 +29,8 @@ class Collection extends Component {
         var items = [];
         this.state = {
             dataSource: ds.cloneWithRows(items),
-            showProgress: true
+            showProgress: true,
+						resultsCount: 0
         };
 
       	this.getCollection();
@@ -46,12 +47,22 @@ class Collection extends Component {
           .then((response)=> response.json())
           .then((responseData)=> {
 
-  		   this.setState({
-    			 dataSource: this.state.dataSource.cloneWithRows(responseData),
-           resultsCount: responseData.length,
-           showProgress: false
-  		   });
+             this.setState({
+               dataSource: this.state.dataSource.cloneWithRows(responseData),
+               resultsCount: responseData.length
+             })
+        })
+         .catch((error)=> {
+             this.setState({
+               serverError: true
+             });
        })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+ 				});
+
     }
 
     pressRow(rowData){
@@ -70,25 +81,45 @@ class Collection extends Component {
                 onPress={()=> this.pressRow(rowData)}
                 underlayColor='#ddd'
           	>
-            <View style={styles.imgsList}>
+            <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 0,
+                alignItems: 'center',
+                borderColor: '#D7D7D7',
+                borderBottomWidth: 1,
+                backgroundColor: '#fff'
+            }}>
               <Image
                   source={{uri: rowData.pic}}
-                  style={styles.img}
+                  style={{
+                         height: 100,
+                         width: 100,
+                         borderRadius: 20,
+                         margin: 20
+                        }}
               />
-
-              <View style={{
-                           flex: 1,
-                           flexDirection: 'column',
-                           justifyContent: 'space-between'
-                          }}>
-                  <Text>{rowData.name}</Text>
-                </View>   
+                <View style={{
+                             flex: 1,
+                             flexDirection: 'column',
+                             justifyContent: 'space-between'
+                            }}>
+                    <Text>{rowData.name}</Text>
+              </View>
             </View>
           </TouchableHighlight>
         );
     }
 
     render(){
+      var errorCtrl = <View />;
+
+        if(this.state.serverError){
+            errorCtrl = <Text style={styles.error}>
+                Something went wrong.
+            </Text>;
+        }
+
       if(this.state.showProgress){
         return (
             <View style={{
@@ -107,6 +138,9 @@ class Collection extends Component {
               <Text style={styles.countHeader}>
                 {this.state.resultsCount} entries were found.
               </Text>
+
+          	{errorCtrl}
+
             </View>
 
             <ScrollView style={{marginTop: 0, marginBottom: 60}}>

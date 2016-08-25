@@ -30,13 +30,14 @@ class Movies extends Component {
         this.state = {
             dataSource: ds.cloneWithRows(items),
             searchQuery: props.searchQuery,
-            showProgress: true
+            showProgress: true,
+						resultsCount: 0
         };
 
-      	this.getCollection();
+      	this.getMovies();
     }
 
-    getCollection(){
+    getMovies(){
        fetch('https://itunes.apple.com/search?media=movie&term='
              + this.state.searchQuery, {
             method: 'get',
@@ -50,10 +51,25 @@ class Movies extends Component {
 						 console.log(responseData.results)
              this.setState({
                dataSource: this.state.dataSource.cloneWithRows(responseData.results),
-               resultsCount: responseData.results.length,
-               showProgress: false
+               resultsCount: responseData.results.length
+             });
+         /*
+         this.props.navigator.replace({
+               component: Movies,
+               title: this.state.resultsCount
+             });
+				*/
+       })
+         .catch((error)=> {
+             this.setState({
+               serverError: true
              });
        })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+ 				});
     }
 
     pressRow(rowData){
@@ -74,19 +90,19 @@ class Movies extends Component {
           	>
             <View style={styles.imgsList}>
               <Image
-                  source={{uri: rowData.artworkUrl100.replace('100x100bb.jpg', '500x500bb.jpg')}}
+        source={{uri: rowData.artworkUrl100.replace('100x100bb.jpg', '500x500bb.jpg')}}
                   style={styles.img}
               />
-              <View style={{
-                           flex: 1,
-                           flexDirection: 'column',
-                           justifyContent: 'space-between'
-                          }}>
-                  <Text>{rowData.trackName}</Text>
-            			<Text>{rowData.releaseDate.split('-')[0]}</Text>
-                  <Text>{rowData.country}</Text>
-                  <Text>{rowData.primaryGenreName}</Text>
-                  <Text>{rowData.artistName}</Text>
+                <View style={{
+                             flex: 1,
+                             flexDirection: 'column',
+                             justifyContent: 'space-between'
+                            }}>
+                    <Text>{rowData.trackName}</Text>
+              			<Text>{rowData.releaseDate.split('-')[0]}</Text>
+                    <Text>{rowData.country}</Text>
+                    <Text>{rowData.primaryGenreName}</Text>
+                    <Text>{rowData.artistName}</Text>
               </View>
             </View>
           </TouchableHighlight>
@@ -94,6 +110,14 @@ class Movies extends Component {
     }
 
     render(){
+      var errorCtrl = <View />;
+
+        if(this.state.serverError){
+            errorCtrl = <Text style={styles.error}>
+                Something went wrong.
+            </Text>;
+        }
+
       if(this.state.showProgress){
         return (
             <View style={{
@@ -107,20 +131,24 @@ class Movies extends Component {
         );
       }
         return (
-          <View style={{flex: 1, justifyContent: 'center'}}>
-            <View style={{marginTop: 60}}>
-              <Text style={styles.countHeader}>
-                  {this.state.resultsCount} entries were found.
+
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <View style={{marginTop: 60}}>
+            <Text style={styles.countHeader}>
+            	{this.state.resultsCount} entries were found.
               </Text>
+
+          	{errorCtrl}
+
             </View>
 
-            <ScrollView style={{marginTop: 0, marginBottom: 60}}>
-              <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this.renderRow.bind(this)}
-              />
-    				</ScrollView>
-  			  </View>
+          <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+            <ListView
+              dataSource={this.state.dataSource}
+              renderRow={this.renderRow.bind(this)}
+            />
+  				</ScrollView>
+			  </View>
       )
 	}
 }

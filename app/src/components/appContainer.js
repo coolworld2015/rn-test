@@ -20,6 +20,7 @@ import Login from './login';
 import Clients from './clients';
 import Collection from './collection';
 import Search from './search';
+import Phones from './phones';
 
 class AppContainer extends Component {
     constructor(props){
@@ -36,9 +37,9 @@ class AppContainer extends Component {
             <TabBarIOS.Item
                 title="Clients"
                 selected={this.state.selectedTab == 'Clients'}
-        				onPress={()=> this.setState({selectedTab: 'Clients'})}
-  					>
-                <NavigatorIOS
+        				onPress={()=> this.setState({selectedTab: 'Clients'})}>
+
+        				<NavigatorIOS
                     style={{
                         flex: 1
                     }}
@@ -52,8 +53,8 @@ class AppContainer extends Component {
             <TabBarIOS.Item
                 title="Collection"
                 selected={this.state.selectedTab == 'Collection'}
-        				onPress={()=> this.setState({selectedTab: 'Collection'})}
-  					>
+        				onPress={()=> this.setState({selectedTab: 'Collection'})}>
+
                 <NavigatorIOS
                     style={{
                         flex: 1
@@ -66,20 +67,45 @@ class AppContainer extends Component {
             </TabBarIOS.Item>
 
             <TabBarIOS.Item
-                title="Search"
-                selected={this.state.selectedTab == 'Search'}
-                onPress={()=> this.setState({selectedTab: 'Search'})}
-             >
+                title="Phones"
+                selected={this.state.selectedTab == 'Phones'}
+        				onPress={()=> this.setState({selectedTab: 'Phones'})}>
 
                 <NavigatorIOS
                     style={{
                         flex: 1
                     }}
                     initialRoute={{
-                        component: Search,
-                        title: 'Search'
+                        component: Phones,
+                        title: 'Phones'
                     }}
                 />
+            </TabBarIOS.Item>
+
+            <TabBarIOS.Item
+                title="Search"
+                selected={this.state.selectedTab == 'Search'}
+                onPress={()=> this.setState({selectedTab: 'Search'})}>
+
+                <NavigatorIOS
+                    style={{
+                        flex: 1
+                    }}
+                    ref="nav"
+                    initialRoute={{
+                        component: Search,
+                        title: 'Search',
+                        leftButtonTitle: 'Add',
+                        rightButtonTitle: 'New',
+                        onRightButtonPress: () => {
+                        this.refs.nav.navigator.push({
+                          title: "Collection",
+                          component: Collection,
+                          rightButtonTitle: 'Cancel',
+                          onRightButtonPress: () => { this.refs.nav.navigator.pop(); }
+                        });}
+                		}}
+               />
             </TabBarIOS.Item>
 
         </TabBarIOS>
