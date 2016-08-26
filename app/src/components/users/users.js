@@ -52,7 +52,7 @@ class Users extends Component {
         .then((responseData)=> {
 
            this.setState({
-             dataSource: this.state.dataSource.cloneWithRows(responseData),
+             dataSource: this.state.dataSource.cloneWithRows(responseData.sort(this.sort)),
              resultsCount: responseData.length
            });
        })
@@ -66,6 +66,17 @@ class Users extends Component {
              showProgress: false
            });
  				});
+    }
+
+    sort(a, b) {
+        var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+        if (nameA < nameB) {
+            return -1
+        }
+        if (nameA > nameB) {
+            return 1
+        }
+        return 0;
     }
 
     pressRow(rowData){
