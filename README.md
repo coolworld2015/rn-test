@@ -28,12 +28,11 @@ To install the version you need to do the following:
 2) Tap "Install application" on opened page.
 3) Pop-up which propose to install an app will appear. Tap "Install".
 4) Tap Home button to hide Safari, app is installing.
-5) Now you need to trust Luxoft's Enterprise profile to be able to run installed app. To do that you need to: 
+5) Now you need to trust ... Enterprise profile to be able to run installed app. To do that you need to: 
 a) Go to Settings => General => Profiles & Device Management.
-b) Select "Luxoft Professional Ooo".
-c) Tap "Trust "Luxoft Professional Ooo"".
+b) Select "... Professional Ooo".
+c) Tap "Trust "... Professional Ooo"".
 d) Pop-up will appear, tap "Trust" there.
 6) That's it. Move back to springboard and run the app.
--------------------------------------------------------------------------------------------------
-https://webapp.diawi.com/install/7918s3
+Installed.
 -------------------------------------------------------------------------------------------------
