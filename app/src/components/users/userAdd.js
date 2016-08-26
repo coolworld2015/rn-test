@@ -29,49 +29,32 @@ class UserAdd extends Component {
     }
 
     addUser(){
-           this.setState({
-             showProgress: true
-           });
-/*
+      this.setState({
+       showProgress: true
+      });
+
+      var id = (Math.random() * 1000000).toFixed();
+
  			fetch('http://ui-base.herokuapp.com/api/users/add/', {
        //+ 	this.state.username, {
             method: 'POST',
             body: JSON.stringify({
-                id: '777',
-                name: 'this.state.name',
-                pass: 'this.state.pass',
-                description: 'this.state.description'
-              }).replace(/{|}/gi, "")
+                id: id,
+                name: this.state.name,
+                pass: this.state.pass,
+                description: this.state.description
+              }),
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
           })
-*/
-var data = {
-  method: 'POST',
-  body: JSON.stringify({
-      id: '777',
-      name: 'this.state.name',
-      pass: 'this.state.pass',
-      description: 'this.state.description'
-    }),
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-};
-          fetch('http://ui-base.herokuapp.com/api/users/add/', data)
  				.then((response)=> response.json())
         .then((responseData)=> {
-console.log(responseData);
                this.setState({
                  badCredentials: false
                });
-
               this.props.navigator.pop();
-/*
-               this.props.navigator.push({
-                   title: 'Edit',
-                   component: Login
-               });
-*/
        })
          .catch((error)=> {
            console.log(error);
