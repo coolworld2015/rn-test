@@ -68,6 +68,10 @@ class Users extends Component {
         this.props.navigator.push({
             title: 'Edit',
             component: UserDetails,
+            rightButtonTitle: 'Cancel',
+            onRightButtonPress: () => {
+              this.props.navigator.pop()
+            },
             passProps: {
                 pushEvent: rowData
             }

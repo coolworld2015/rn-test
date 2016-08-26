@@ -88,7 +88,9 @@ class AppContainer extends Component {
                                  title: "Search",
                                  component: PhoneSearch,
                                  rightButtonTitle: 'Cancel',
-                                 onRightButtonPress: () => { this.refs.phones.navigator.pop(); }
+                                 onRightButtonPress: () => {
+                                   this.refs.phones.navigator.pop()
+                                 }
                                });
  												}
                      }}
