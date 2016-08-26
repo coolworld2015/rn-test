@@ -101,6 +101,13 @@ class Users extends Component {
         );
     }
 
+    refreshData(){
+      this.setState({
+          showProgress: true
+      });
+      this.getUsers();
+    }
+
     render(){
       var errorCtrl = <View />;
 
@@ -133,8 +140,11 @@ class Users extends Component {
 
             </View>
 
-            <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+            <ScrollView
+                style={{marginTop: 0, marginBottom: 60}}
+                onScroll={this.refreshData.bind(this)}>
               <ListView
+
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow.bind(this)}
               />
