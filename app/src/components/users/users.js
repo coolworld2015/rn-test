@@ -36,6 +36,10 @@ class Users extends Component {
       	this.getUsers();
     }
 
+    componentWillupdated(){
+
+    }
+    
     getUsers(){
        fetch('http://ui-base.herokuapp.com/api/users/get', {
             method: 'get',

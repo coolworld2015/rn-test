@@ -16,7 +16,7 @@ import {
     TextInput
 } from 'react-native';
 
-//import Login from '../app/login';
+import Users from './users';
 
 class UserAdd extends Component {
     constructor(props){
@@ -36,7 +36,6 @@ class UserAdd extends Component {
       var id = (Math.random() * 1000000).toFixed();
 
  			fetch('http://ui-base.herokuapp.com/api/users/add/', {
-       //+ 	this.state.username, {
             method: 'POST',
             body: JSON.stringify({
                 id: id,
@@ -51,7 +50,12 @@ class UserAdd extends Component {
           })
  				.then((response)=> response.json())
         .then((responseData)=> {
-              this.props.navigator.pop();
+
+          this.props.navigator.push({
+              title: 'Users',
+              component: Users
+          });
+            //  this.props.navigator.pop();
        })
          .catch((error)=> {
            console.log(error);
