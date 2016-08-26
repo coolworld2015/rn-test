@@ -39,7 +39,7 @@ class Users extends Component {
     componentWillupdated(){
 
     }
-    
+
     getUsers(){
        fetch('http://ui-base.herokuapp.com/api/users/get', {
             method: 'get',
@@ -112,7 +112,7 @@ class Users extends Component {
             showProgress: true,
             resultsCount: event.nativeEvent.contentOffset.y
         });
-        setTimeout(() => {this.getUsers()}, 100);
+        setTimeout(() => {this.getUsers()}, 300);
       }
     }
 
