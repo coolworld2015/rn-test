@@ -32,18 +32,35 @@ class UserAdd extends Component {
            this.setState({
              showProgress: true
            });
-
- 			fetch('http://ui-base.herokuapp.com/api/users/get/', {
+/*
+ 			fetch('http://ui-base.herokuapp.com/api/users/add/', {
        //+ 	this.state.username, {
-            method: 'get',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
+            method: 'POST',
+            body: JSON.stringify({
+                id: '777',
+                name: 'this.state.name',
+                pass: 'this.state.pass',
+                description: 'this.state.description'
+              }).replace(/{|}/gi, "")
           })
+*/
+var data = {
+  method: 'POST',
+  body: JSON.stringify({
+      id: '777',
+      name: 'this.state.name',
+      pass: 'this.state.pass',
+      description: 'this.state.description'
+    }),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+};
+          fetch('http://ui-base.herokuapp.com/api/users/add/', data)
  				.then((response)=> response.json())
         .then((responseData)=> {
-
+console.log(responseData);
                this.setState({
                  badCredentials: false
                });
@@ -104,7 +121,6 @@ class UserAdd extends Component {
                     placeholder="Description"></TextInput>
 
                 <TouchableHighlight
-                    //onPress={this.onLoginPressed.bind(this)}
                     onPress={()=> this.addUser()}
                     style={styles.button}>
                     <Text style={styles.buttonText}>Submit</Text>

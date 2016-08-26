@@ -605,7 +605,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Luxoft Professional Ooo";
 				DEAD_CODE_STRIPPING = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -620,7 +619,6 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = Cool;
-				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -628,7 +626,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Luxoft Professional Ooo";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -642,7 +639,6 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = Cool;
-				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -688,6 +684,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "7422df21-5a0e-442e-b09b-35e8c5cbd9f7";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -709,7 +706,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -727,6 +724,7 @@
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "e679f293-13f2-41ac-9b2e-3d15f7943ee5";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
