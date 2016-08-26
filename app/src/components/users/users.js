@@ -101,11 +101,15 @@ class Users extends Component {
         );
     }
 
-    refreshData(){
-      this.setState({
-          showProgress: true
-      });
-      this.getUsers();
+    refreshData(event){
+      if (event.nativeEvent.contentOffset.y <= -50) {
+
+        this.setState({
+            showProgress: true,
+            resultsCount: event.nativeEvent.contentOffset.y
+        });
+        setTimeout(() => {this.getUsers()}, 100);
+      }
     }
 
     render(){
@@ -141,10 +145,9 @@ class Users extends Component {
             </View>
 
             <ScrollView
-                style={{marginTop: 0, marginBottom: 60}}
-                onScroll={this.refreshData.bind(this)}>
+                onScroll={this.refreshData.bind(this)} scrollEventThrottle={16}
+                style={{marginTop: 0, marginBottom: 60}}>
               <ListView
-
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow.bind(this)}
               />

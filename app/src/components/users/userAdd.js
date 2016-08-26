@@ -51,9 +51,6 @@ class UserAdd extends Component {
           })
  				.then((response)=> response.json())
         .then((responseData)=> {
-               this.setState({
-                 badCredentials: false
-               });
               this.props.navigator.pop();
        })
          .catch((error)=> {
