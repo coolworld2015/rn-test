@@ -21,35 +21,58 @@ class UserDetails extends Component {
         super(props);
 
         this.state = {
-            pushEvent: props.pushEvent
+            pushEvent: props.pushEvent,
+            name: props.pushEvent.name,
+            pass: props.pushEvent.pass,
+            description: props.pushEvent.description
         };
     }
 
   render() {
     return (
       <ScrollView>
-        <View style={{
-            flex: 1,
-            paddingTop: 20,
-            justifyContent: 'flex-start',
-            alignItems: 'center'
-        }}>
+      <View style={styles.container}>
 
-        <Text style={styles.welcome}>
-          Name: {this.state.pushEvent.name}
-        </Text>
+      <Text style={{
+          fontSize: 24,
+      		textAlign: 'center',
+      		marginTop: 0
+      }}>
+      		{this.state.name}
+      </Text>
 
-        <Text style={styles.welcome}>
-          ID: {this.state.pushEvent.id}
-        </Text>
+      <TextInput
+        onChangeText={(text)=> this.setState({name: text})}
+        style={styles.loginInput}
+        value={this.state.name}
+        placeholder="Name">
+      </TextInput>
 
-        <Text style={styles.welcome}>
-          Password: {this.state.pushEvent.pass}
-        </Text>
+      <TextInput
+        style={styles.loginInput}
+        value={this.state.pushEvent.id}>
+      </TextInput>
 
-        <Text style={styles.welcome}>
-          Description: {this.state.pushEvent.description}
-        </Text>
+      <TextInput
+        onChangeText={(text)=> this.setState({name: text})}
+        style={styles.loginInput}
+        value={this.state.pass}
+        placeholder="Password">
+      </TextInput>
+
+      <TextInput
+        onChangeText={(text)=> this.setState({name: text})}
+        style={styles.loginInput}
+        value={this.state.description}
+        placeholder="Description">
+      </TextInput>
+
+      <TouchableHighlight
+        //onPress={this.onLoginPressed.bind(this)}
+        //onPress={()=> this.addUser()}
+        style={styles.button}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableHighlight>
 
         </View>
       </ScrollView>
@@ -71,7 +94,7 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: '#F5FCFF',
-        paddingTop: 40,
+        paddingTop: 10,
         padding: 10,
         alignItems: 'center',
         flex: 1

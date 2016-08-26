@@ -66,7 +66,7 @@ class Users extends Component {
 
     pressRow(rowData){
         this.props.navigator.push({
-            title: rowData.name,
+            title: 'Edit',
             component: UserDetails,
             passProps: {
                 pushEvent: rowData

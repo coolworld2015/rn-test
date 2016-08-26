@@ -23,6 +23,7 @@ import Search from '../movies/search';
 import Phones from '../phones/phones';
 import PhoneSearch from '../phones/phoneSearch';
 import Users from '../users/users';
+import UserAdd from '../users/userAdd';
 
 class AppContainer extends Component {
     constructor(props){
@@ -110,8 +111,8 @@ class AppContainer extends Component {
                           leftButtonTitle: 'Add',
                           onLeftButtonPress: () => {
                               this.refs.users.navigator.push({
-                                  title: "Search",
-                                  component: PhoneSearch,
+                                  title: "Add",
+                                  component: UserAdd,
                                   rightButtonTitle: 'Cancel',
                                   onRightButtonPress: () => { this.refs.users.navigator.pop(); }
                                 });
