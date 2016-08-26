@@ -16,6 +16,8 @@ import {
     TextInput
 } from 'react-native';
 
+//import Login from '../app/login';
+
 class UserAdd extends Component {
     constructor(props){
         super(props);
@@ -31,9 +33,8 @@ class UserAdd extends Component {
              showProgress: true
            });
 
-      console.log('starting geting user...');
- 			fetch('http://ui-warehouse.herokuapp.com/api/users/findByName/'
-       + 	this.state.username, {
+ 			fetch('http://ui-base.herokuapp.com/api/users/get/', {
+       //+ 	this.state.username, {
             method: 'get',
             headers: {
               'Accept': 'application/json',
@@ -43,23 +44,22 @@ class UserAdd extends Component {
  				.then((response)=> response.json())
         .then((responseData)=> {
 
-   				if (this.state.password == responseData.pass) {
-
                this.setState({
                  badCredentials: false
                });
 
-            	this.props.onLogin().bind(this);
-
-          } else {
-             	this.setState({
-                 badCredentials: true
-             });
-          }
+              this.props.navigator.pop();
+/*
+               this.props.navigator.push({
+                   title: 'Edit',
+                   component: Login
+               });
+*/
        })
          .catch((error)=> {
+           console.log(error);
              this.setState({
-               badCredentials: true
+               serverError: true
              });
        })
          .finally(()=> {
@@ -72,15 +72,9 @@ class UserAdd extends Component {
     render(){
         var errorCtrl = <View />;
 
-        if(!this.state.success && this.state.badCredentials){
+        if(this.state.serverError){
             errorCtrl = <Text style={styles.error}>
-                That username and password combination did not work
-            </Text>;
-        }
-
-        if(!this.state.success && this.state.unknownError){
-            errorCtrl = <Text style={styles.error}>
-                We experienced an unexpected issue
+                Something went wrong.
             </Text>;
         }
 
@@ -111,7 +105,7 @@ class UserAdd extends Component {
 
                 <TouchableHighlight
                     //onPress={this.onLoginPressed.bind(this)}
-                    //onPress={()=> this.addUser()}
+                    onPress={()=> this.addUser()}
                     style={styles.button}>
                     <Text style={styles.buttonText}>Submit</Text>
                 </TouchableHighlight>
@@ -138,7 +132,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#F5FCFF',
+      //backgroundColor: '#F5FCFF',
     },
     welcome: {
       fontSize: 20,
@@ -146,7 +140,7 @@ const styles = StyleSheet.create({
       margin: 20,
     },
     container: {
-        backgroundColor: '#F5FCFF',
+        //backgroundColor: '#F5FCFF',
         paddingTop: 10,
         padding: 10,
         alignItems: 'center',
