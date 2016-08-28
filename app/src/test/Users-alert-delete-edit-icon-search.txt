@@ -14,7 +14,6 @@ import {
     TabBarIOS,
     NavigatorIOS,
     TextInput,
-    MapView,
   	Alert
 } from 'react-native';
 
@@ -26,12 +25,7 @@ class AppContainer extends Component {
             selectedTab: 'Users'
         }
     }
-  _icon(imageUri) {
-  return {
-    uri: imageUri,
-    isStatic: true
-  };
-}
+
     render(){
       return (
         <TabBarIOS style={styles.AppContainer}>
@@ -142,13 +136,7 @@ class Users extends Component {
           })
  
         .then((responseData)=> {
- /*        
-          this.props.navigator.push({
-              title: 'Users',
-              component: Users
-          });
- */
-       })
+	       })
          .catch((error)=> {
            console.log(error);
              this.setState({
@@ -249,31 +237,19 @@ class Users extends Component {
                   height: 45,
                   marginTop: 5,
                   padding: 5,
-                  //fontSize: 18,
-          				//backgroundColor: '#F5FCFF',
                   backgroundColor: 'white', 
                   borderWidth: 1,
-                  //borderColor: '#48BBEC',
                   borderColor: 'lightgray',
                   borderRadius: 0,
-                  //color: '#48BBEC'
           				}}
- onChangeText={(text)=> {
-          //console.log(this.state.responseData);
-          var that = this;
-          var arr = [].concat(this.state.responseData);
-          //console.log(arr)
-	var items = arr.filter(function(el) {       
-    console.log(el.name + ' - ' + text)
-    return el.name.indexOf(text) >= 0
-		//return el.name <= text
-  }); 
-          console.log(items)
-	this.setState({
-		dataSource: this.state.dataSource.cloneWithRows(items),
-     resultsCount: items.length,
-	})
-}}
+              onChangeText={(text)=> {
+                  var arr = [].concat(this.state.responseData);
+                  var items = arr.filter((el) => el.name.indexOf(text) >= 0); 
+                  this.setState({
+                     dataSource: this.state.dataSource.cloneWithRows(items),
+                     resultsCount: items.length,
+                  })
+                }}
                 placeholder="Search">
               </TextInput>
 
@@ -423,10 +399,7 @@ class UserAdd extends Component {
         super(props);
 
         this.state = {
-            showProgress: false,
-          	name: 'name',
-            pass: 'pass',
-            description: 'description'
+            showProgress: false
         }
     }
 
@@ -452,13 +425,7 @@ class UserAdd extends Component {
           })
  				.then((response)=> response.json())
         .then((responseData)=> {
-  /*      
-          this.props.navigator.push({
-              title: 'Users',
-              component: Users
-          });
- */
-       })
+	       })
          .catch((error)=> {
            console.log(error);
              this.setState({
@@ -557,9 +524,7 @@ const styles = StyleSheet.create({
       fontSize: 16,
       textAlign: 'center',
       padding: 10,
-      //borderWidth: 1,
       borderColor: '#D7D7D7',
-      //backgroundColor: '#F5FCFF',
       backgroundColor: 'whitesmoke'
     },
     welcome: {
@@ -573,10 +538,8 @@ const styles = StyleSheet.create({
         padding: 4,
         fontSize: 18,
         borderWidth: 1,
-        //borderColor: '#48BBEC',
         borderColor: 'lightgray',      
         borderRadius: 0,
-        //color: '#48BBEC',
         color: 'gray'
     },
     button: {
@@ -608,19 +571,5 @@ const styles = StyleSheet.create({
       margin: 20
     }
 });
-
-class App extends Component  {
-  constructor(props){
-    super(props);
-  }
-  render(){
-    return ( 
-      <MapView
-        style={{height: 200, margin: 40}}
-        showsUserLocation={true}
-      />
-     )
-	}
-}
 
 AppRegistry.registerComponent('SampleApp', () => AppContainer);
