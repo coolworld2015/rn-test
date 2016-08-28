@@ -1,0 +1,579 @@
+'use strict'
+
+import React, { Component } from 'react';
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableHighlight,
+    ListView,
+    ScrollView,
+    ActivityIndicatorIOS,
+    TabBarIOS,
+    NavigatorIOS,
+    TextInput,
+    MapView,
+  	Alert
+} from 'react-native';
+
+class AppContainer extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            selectedTab: 'Users'
+        }
+    }
+  _icon(imageUri) {
+  return {
+    uri: imageUri,
+    isStatic: true
+  };
+}
+    render(){
+      return (
+        <TabBarIOS style={styles.AppContainer}>
+             <TabBarIOS.Item
+                  title="Users"
+        					systemIcon='contacts'
+                  selected={this.state.selectedTab == 'Users'}
+          				onPress={()=> this.setState({selectedTab: 'Users'})}>
+
+                  <NavigatorIOS
+                      style={{
+                          flex: 1
+                      }}
+                      ref="users"
+                      initialRoute={{
+                          component: Users,
+                          title: 'Users',
+                          rightButtonTitle: 'Add',
+                          onRightButtonPress: () => {
+                              this.refs.users.navigator.push({
+                                  title: "New user",
+                                  component: UserAdd,
+                                  rightButtonTitle: 'Cancel',
+                                  onRightButtonPress: () => { 			                                                            this.refs.users.navigator.pop(); 
+                                  }
+                                });
+  												}
+                      }}
+                  />
+              </TabBarIOS.Item>                
+        </TabBarIOS>
+      );
+    }
+}
+ 
+class Users extends Component {
+    constructor(props){
+        super(props);
+
+        var ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 != r2
+        });
+
+        this.state = {
+            dataSource: ds.cloneWithRows([]),
+            showProgress: true,
+            serverError: false,
+          	resultsCount: 0
+        };
+
+      	this.getUsers();
+    }
+ 
+    getUsers(){
+       fetch('http://ui-base.herokuapp.com/api/users/get', {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+ 				.then((response)=> response.json())
+        .then((responseData)=> {
+
+         this.setState({
+           dataSource: this.state.dataSource.cloneWithRows(responseData.sort(this.sort)),
+           resultsCount: responseData.length
+         });
+       })
+         .catch((error)=> {
+             this.setState({
+               serverError: true
+             });
+       })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+ 				});
+    }
+
+    sort(a, b) {
+        var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+        if (nameA < nameB) {
+            return -1
+        }
+        if (nameA > nameB) {
+            return 1
+        }
+        return 0;
+    }
+  
+    deleteUser(id){
+      this.setState({
+       showProgress: true
+      });
+
+ 			fetch('http://ui-base.herokuapp.com/api/users/delete/', {
+            method: 'POST',
+            body: JSON.stringify({
+                id: id
+              }),
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+          })
+ 
+        .then((responseData)=> {
+ /*        
+          this.props.navigator.push({
+              title: 'Users',
+              component: Users
+          });
+ */
+       })
+         .catch((error)=> {
+           console.log(error);
+             this.setState({
+               serverError: true
+             });
+       })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+           this.props.navigator.pop();
+ 				});
+    }
+  
+    pressRow(rowData){
+        this.props.navigator.push({
+            title: 'Edit',
+            component: UserDetails,
+            rightButtonTitle: 'Delete',
+            onRightButtonPress: () => {
+              Alert.alert(
+                'Delete user',
+                'Are you sure you want to delete user ' + rowData.name + '?',
+                [
+                  {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+                  {text: 'OK', onPress: () => {
+                    this.deleteUser(rowData.id); 
+                  	}
+                  },
+                ]
+              );
+            },
+            passProps: {
+                pushEvent: rowData
+            }
+        });
+    }
+
+    renderRow(rowData){
+        return (
+          	<TouchableHighlight
+                onPress={()=> this.pressRow(rowData)}
+                underlayColor='#ddd'
+          	>
+            <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 20,
+                alignItems: 'center',
+                borderColor: '#D7D7D7',
+                borderBottomWidth: 1,
+                backgroundColor: '#fff'
+            }}>
+              <Text style={{backgroundColor: '#fff'}}>
+                  {rowData.name}
+              </Text>
+            </View>
+          </TouchableHighlight>
+        );
+    }
+
+    refreshData(event){
+      if (event.nativeEvent.contentOffset.y <= -100) {
+
+        this.setState({
+            showProgress: true,
+            resultsCount: event.nativeEvent.contentOffset.y
+        });
+        setTimeout(() => {this.getUsers()}, 300);
+      }
+    }
+
+    render(){
+      var errorCtrl = <View />;
+
+        if(this.state.serverError){
+            errorCtrl = <Text style={styles.error}>
+                Something went wrong.
+            </Text>;
+        }
+
+      if(this.state.showProgress){
+        return (
+            <View style={{
+                flex: 1,
+                justifyContent: 'center'
+            }}>
+                <ActivityIndicatorIOS
+                    size="large"
+                    animating={true} />
+            </View>
+        );
+      }
+        return (
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{marginTop: 60}}>
+              <Text style={styles.countHeader}>
+              	{this.state.resultsCount} entries were found.
+              </Text>
+
+          	{errorCtrl}
+
+            </View>
+
+            <ScrollView
+                onScroll={this.refreshData.bind(this)} scrollEventThrottle={16}
+                style={{marginTop: 0, marginBottom: 60}}>
+              <ListView
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow.bind(this)}
+              />
+    				</ScrollView>
+  			  </View>
+      );
+	}
+}
+
+class UserDetails extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            pushEvent: props.pushEvent,
+            id: props.pushEvent.id,
+            name: props.pushEvent.name,
+            pass: props.pushEvent.pass,
+            description: props.pushEvent.description
+        };
+    }
+  
+    updateUser(){
+        this.setState({
+          showProgress: true
+        });
+
+ 			fetch('http://ui-base.herokuapp.com/api/users/update/', {
+            method: 'POST',
+            body: JSON.stringify({
+                id: this.state.id,
+                name: this.state.name,
+                pass: this.state.pass,
+                description: this.state.description
+              }),
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+          })
+        .then((responseData)=> {
+ 
+       })
+         .catch((error)=> {
+           console.log(error);
+             this.setState({
+               serverError: true
+             });
+       })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+       		this.props.navigator.pop(); 
+ 				});
+    }
+
+  render() {
+    
+    if(this.state.showProgress){
+        return (
+            <View style={{
+                flex: 1,
+                justifyContent: 'center'
+            }}>
+                <ActivityIndicatorIOS
+                    size="large"
+                    animating={true} />
+            </View>
+        );
+      }
+    
+    return (
+      <ScrollView>
+        <View style={{
+            flex: 1,
+            paddingTop: 0,
+            justifyContent: 'flex-start'
+        }}>
+      
+      <Text style={{
+          fontSize: 24,
+      		textAlign: 'center',
+      		marginTop: 10,
+      }}>
+      		{this.state.name}
+      </Text>
+      
+      <TextInput
+        onChangeText={(text)=> this.setState({name: text})}
+        style={styles.loginInput}
+        value={this.state.name}
+        placeholder="Name">
+      </TextInput>
+        
+      <TextInput
+        style={styles.loginInput}
+        value={this.state.pushEvent.id}>
+      </TextInput>
+        
+      <TextInput
+        onChangeText={(text)=> this.setState({name: text})}
+        style={styles.loginInput}
+        value={this.state.pass}
+        placeholder="Password">
+      </TextInput>
+        
+      <TextInput
+        onChangeText={(text)=> this.setState({name: text})}
+        style={styles.loginInput}
+        value={this.state.description}
+        placeholder="Description">
+      </TextInput>
+          
+      <TouchableHighlight
+        onPress={()=> this.updateUser()}
+        style={styles.button}>
+        <Text style={styles.buttonText}>Update user</Text>
+      </TouchableHighlight>   
+          
+        </View>
+      </ScrollView>
+    );
+  }
+}
+
+class UserAdd extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            showProgress: false,
+          	name: 'name',
+            pass: 'pass',
+            description: 'description'
+        }
+    }
+
+    addUser(){
+      this.setState({
+       	showProgress: true
+      });
+
+      var id = (Math.random() * 1000000).toFixed();
+
+ 			fetch('http://ui-base.herokuapp.com/api/users/add/', {
+            method: 'POST',
+            body: JSON.stringify({
+                id: id,
+                name: this.state.name,
+                pass: this.state.pass,
+                description: this.state.description
+              }),
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+          })
+ 				.then((response)=> response.json())
+        .then((responseData)=> {
+  /*      
+          this.props.navigator.push({
+              title: 'Users',
+              component: Users
+          });
+ */
+       })
+         .catch((error)=> {
+           console.log(error);
+             this.setState({
+               serverError: true
+             });
+       })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+       		this.props.navigator.pop(); 
+ 				});
+    }
+
+    render(){
+        var errorCtrl = <View />;
+
+        if(this.state.serverError){
+            errorCtrl = <Text style={styles.error}>
+                Something went wrong.
+            </Text>;
+        }
+
+        return (
+          <ScrollView>
+            <View style={{
+              flex: 1,
+              paddingTop: 0,
+              justifyContent: 'flex-start'
+            }}>
+
+                <Text style={{
+                    fontSize: 24,
+                    textAlign: 'center',
+                    marginTop: 10,
+                }}>
+          				New user
+                </Text>
+
+                <TextInput
+                    onChangeText={(text)=> this.setState({name: text})}
+                    style={styles.loginInput}
+                    value={this.state.name}
+                    placeholder="Name">
+                </TextInput>
+                
+                <TextInput
+                    onChangeText={(text)=> this.setState({pass: text})}
+                    style={styles.loginInput}
+                    value={this.state.pass}
+                    placeholder="Password">
+                </TextInput>
+                    
+                <TextInput
+                    onChangeText={(text)=> this.setState({description: text})}
+                    style={styles.loginInput}
+                    value={this.state.description}
+                    placeholder="Description"></TextInput>
+
+                <TouchableHighlight
+                    onPress={()=> this.addUser()}
+                    style={styles.button}>
+                    <Text style={styles.buttonText}>Add user</Text>
+                </TouchableHighlight>
+
+                {errorCtrl}
+
+                <ActivityIndicatorIOS
+                    animating={this.state.showProgress}
+                    size="large"
+                    style={styles.loader}
+                 />
+            </View>
+          </ScrollView>
+        )
+    }
+
+    onLoginPressed(){
+				this.props.onLogin();
+    }
+}
+const styles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'gray',
+    },
+    countHeader: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 15,
+      backgroundColor: '#F5FCFF',
+    },
+    welcome: {
+      fontSize: 20,
+      textAlign: 'center',
+      margin: 20,
+    },
+    loginInput: {
+        height: 50,
+        marginTop: 10,
+        padding: 4,
+        fontSize: 18,
+        borderWidth: 1,
+        borderColor: '#48BBEC',
+        borderRadius: 0,
+        color: '#48BBEC'
+    },
+    button: {
+        height: 50,
+        backgroundColor: '#48BBEC',
+        borderColor: '#48BBEC',
+        alignSelf: 'stretch',
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 24
+    },
+    loader: {
+        marginTop: 20
+    },
+    error: {
+        color: 'red',
+        paddingTop: 10,
+        textAlign: 'center'
+    },
+    img: {
+      height: 95,
+      width: 75,
+      borderRadius: 20,
+      margin: 20
+    }
+});
+
+class App extends Component  {
+  constructor(props){
+    super(props);
+  }
+  render(){
+    return ( 
+      <MapView
+        style={{height: 200, margin: 40}}
+        showsUserLocation={true}
+      />
+     )
+	}
+}
+
+AppRegistry.registerComponent('SampleApp', () => AppContainer);
