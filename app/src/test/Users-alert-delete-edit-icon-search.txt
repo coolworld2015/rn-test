@@ -98,7 +98,8 @@ class Users extends Component {
 
       this.setState({
  dataSource: this.state.dataSource.cloneWithRows(responseData.sort(this.sort)),
- resultsCount: responseData.length
+ resultsCount: responseData.length,
+ responseData: responseData       
          });
        })
          .catch((error)=> {
@@ -257,7 +258,22 @@ class Users extends Component {
                   borderRadius: 0,
                   //color: '#48BBEC'
           				}}
-
+ onChangeText={(text)=> {
+          //console.log(this.state.responseData);
+          var that = this;
+          var arr = [].concat(this.state.responseData);
+          //console.log(arr)
+	var items = arr.filter(function(el) {       
+    console.log(el.name + ' - ' + text)
+    return el.name.indexOf(text) >= 0
+		//return el.name <= text
+  }); 
+          console.log(items)
+	this.setState({
+		dataSource: this.state.dataSource.cloneWithRows(items),
+     resultsCount: items.length,
+	})
+}}
                 placeholder="Search">
               </TextInput>
 
