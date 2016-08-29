@@ -26,18 +26,14 @@ class Users extends Component {
             rowHasChanged: (r1, r2) => r1 != r2
         });
 
-        var items = [];
         this.state = {
-            dataSource: ds.cloneWithRows(items),
+            dataSource: ds.cloneWithRows([]),
             showProgress: true,
+            serverError: false,
           	resultsCount: 0
         };
 
       	this.getUsers();
-    }
-
-    componentWillupdated(){
-
     }
 
     getUsers(){
@@ -51,10 +47,11 @@ class Users extends Component {
  				.then((response)=> response.json())
         .then((responseData)=> {
 
-           this.setState({
-             dataSource: this.state.dataSource.cloneWithRows(responseData.sort(this.sort)),
-             resultsCount: responseData.length
-           });
+      this.setState({
+         dataSource: this.state.dataSource.cloneWithRows(responseData.sort(this.sort)),
+         resultsCount: responseData.length,
+         responseData: responseData
+         });
        })
          .catch((error)=> {
              this.setState({
@@ -79,13 +76,55 @@ class Users extends Component {
         return 0;
     }
 
+    deleteUser(id){
+      this.setState({
+       showProgress: true
+      });
+
+ 			fetch('http://ui-base.herokuapp.com/api/users/delete/', {
+            method: 'POST',
+            body: JSON.stringify({
+                id: id
+              }),
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+          })
+
+        .then((responseData)=> {
+	       })
+         .catch((error)=> {
+           console.log(error);
+             this.setState({
+               serverError: true
+             });
+       })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+           this.props.navigator.pop();
+ 				});
+    }
+
     pressRow(rowData){
         this.props.navigator.push({
             title: 'Edit',
             component: UserDetails,
             rightButtonTitle: 'Delete',
             onRightButtonPress: () => {
-              this.props.navigator.pop()
+              Alert.alert(
+                'Delete user',
+                'Are you sure you want to delete user ' + rowData.name + '?',
+                [
+                  {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+                  {text: 'OK', onPress: () => {
+                    this.deleteUser(rowData.id);
+                  	}
+                  },
+                ]
+              );
             },
             passProps: {
                 pushEvent: rowData
@@ -117,7 +156,7 @@ class Users extends Component {
     }
 
     refreshData(event){
-      if (event.nativeEvent.contentOffset.y <= -50) {
+      if (event.nativeEvent.contentOffset.y <= -70) {
 
         this.setState({
             showProgress: true,
@@ -151,9 +190,25 @@ class Users extends Component {
         return (
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{marginTop: 60}}>
-              <Text style={styles.countHeader}>
-              	{this.state.resultsCount} entries were found.
-              </Text>
+              <TextInput style={{
+                  height: 45,
+                  marginTop: 5,
+                  padding: 5,
+                  backgroundColor: 'white',
+                  borderWidth: 1,
+                  borderColor: 'lightgray',
+                  borderRadius: 0,
+          				}}
+              onChangeText={(text)=> {
+                  var arr = [].concat(this.state.responseData);
+                  var items = arr.filter((el) => el.name.indexOf(text) >= 0);
+                  this.setState({
+                     dataSource: this.state.dataSource.cloneWithRows(items),
+                     resultsCount: items.length,
+                  })
+                }}
+                placeholder="Search">
+              </TextInput>
 
           	{errorCtrl}
 
@@ -161,12 +216,19 @@ class Users extends Component {
 
             <ScrollView
                 onScroll={this.refreshData.bind(this)} scrollEventThrottle={16}
-                style={{marginTop: 0, marginBottom: 60}}>
+                style={{marginTop: 0, marginBottom: 0}}>
               <ListView
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow.bind(this)}
               />
     				</ScrollView>
+
+            <View style={{marginBottom: 49}}>
+							<Text style={styles.countFooter}>
+              	{this.state.resultsCount} entries were found.
+              </Text>
+            </View>
+
   			  </View>
       );
 	}
@@ -177,7 +239,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#F5FCFF',
+      backgroundColor: 'gray',
     },
     countHeader: {
       fontSize: 16,
@@ -185,26 +247,17 @@ const styles = StyleSheet.create({
       padding: 15,
       backgroundColor: '#F5FCFF',
     },
+  	countFooter: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 10,
+      borderColor: '#D7D7D7',
+      backgroundColor: 'whitesmoke'
+    },
     welcome: {
       fontSize: 20,
       textAlign: 'center',
       margin: 20,
-    },
-    container: {
-        backgroundColor: '#F5FCFF',
-        paddingTop: 40,
-        padding: 10,
-        alignItems: 'center',
-        flex: 1
-    },
-    logo: {
-        width: 66,
-        height: 65
-    },
-    heading: {
-        fontSize: 30,
-        margin: 10,
-        marginBottom: 20
     },
     loginInput: {
         height: 50,
@@ -212,9 +265,9 @@ const styles = StyleSheet.create({
         padding: 4,
         fontSize: 18,
         borderWidth: 1,
-        borderColor: '#48BBEC',
+        borderColor: 'lightgray',
         borderRadius: 0,
-        color: '#48BBEC'
+        color: 'gray'
     },
     button: {
         height: 50,
@@ -237,6 +290,12 @@ const styles = StyleSheet.create({
         color: 'red',
         paddingTop: 10,
         textAlign: 'center'
+    },
+    img: {
+      height: 95,
+      width: 75,
+      borderRadius: 20,
+      margin: 20
     }
 });
 

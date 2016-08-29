@@ -99,8 +99,9 @@ class AppContainer extends Component {
 
              <TabBarIOS.Item
                   title="Users"
+        					systemIcon="contacts"
                   selected={this.state.selectedTab == 'Users'}
-          				 onPress={()=> this.setState({selectedTab: 'Users'})}>
+          				onPress={()=> this.setState({selectedTab: 'Users'})}>
 
                   <NavigatorIOS
                       style={{
@@ -110,18 +111,20 @@ class AppContainer extends Component {
                       initialRoute={{
                           component: Users,
                           title: 'Users',
-                          leftButtonTitle: 'Add',
-                          onLeftButtonPress: () => {
+                          rightButtonTitle: 'Add',
+                          onRightButtonPress: () => {
                               this.refs.users.navigator.push({
-                                  title: "Add",
+                                  title: "New user",
                                   component: UserAdd,
                                   rightButtonTitle: 'Cancel',
-                                  onRightButtonPress: () => { this.refs.users.navigator.pop(); }
+                                  onRightButtonPress: () => {
+                                    this.refs.users.navigator.pop();
+                                  }
                                 });
   												}
                       }}
                   />
-              </TabBarIOS.Item>
+              </TabBarIOS.Item>    
 
             <TabBarIOS.Item
                 title="Movies"

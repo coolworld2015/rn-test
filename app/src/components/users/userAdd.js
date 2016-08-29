@@ -23,14 +23,22 @@ class UserAdd extends Component {
         super(props);
 
         this.state = {
-            showProgress: false,
-          	name: 'ed'
+            showProgress: false
         }
     }
 
     addUser(){
+      if (this.state.name == undefined ||
+          this.state.pass == undefined ||
+          this.state.description == undefined) {
+        this.setState({
+       			invalidValue: true
+     		});
+      return;
+      }
+
       this.setState({
-       showProgress: true
+       	showProgress: true
       });
 
       var id = (Math.random() * 1000000).toFixed();
@@ -50,13 +58,7 @@ class UserAdd extends Component {
           })
  				.then((response)=> response.json())
         .then((responseData)=> {
-
-          this.props.navigator.push({
-              title: 'Users',
-              component: Users
-          });
-            //  this.props.navigator.pop();
-       })
+	       })
          .catch((error)=> {
            console.log(error);
              this.setState({
@@ -67,6 +69,7 @@ class UserAdd extends Component {
            this.setState({
              showProgress: false
            });
+       		this.props.navigator.pop();
  				});
     }
 
@@ -75,39 +78,60 @@ class UserAdd extends Component {
 
         if(this.state.serverError){
             errorCtrl = <Text style={styles.error}>
-                Something went wrong.
+              	Something went wrong.
+            </Text>;
+        }
+
+        var validCtrl = <View />;
+
+        if(this.state.invalidValue){
+            validCtrl = <Text style={styles.error}>
+                Value required - please provide.
             </Text>;
         }
 
         return (
           <ScrollView>
-            <View style={styles.container}>
-
-            <Text style={{
-                fontSize: 24,
-            		textAlign: 'center',
-            		marginTop: 0
+            <View style={{
+              flex: 1,
+              padding: 10,
+              justifyContent: 'flex-start'
             }}>
-          				Add user
+
+                <Text style={{
+                    fontSize: 24,
+                    textAlign: 'center',
+                    marginTop: 10,
+                }}>
+          				New user
                 </Text>
 
                 <TextInput
                     onChangeText={(text)=> this.setState({name: text})}
                     style={styles.loginInput}
-                    placeholder="Name"></TextInput>
+                    value={this.state.name}
+                    placeholder="Name">
+                </TextInput>
+
                 <TextInput
                     onChangeText={(text)=> this.setState({pass: text})}
                     style={styles.loginInput}
-                    placeholder="Password"></TextInput>
+                    value={this.state.pass}
+                    placeholder="Password">
+                </TextInput>
+
                 <TextInput
                     onChangeText={(text)=> this.setState({description: text})}
                     style={styles.loginInput}
+                    value={this.state.description}
                     placeholder="Description"></TextInput>
+
+ 								{validCtrl}
 
                 <TouchableHighlight
                     onPress={()=> this.addUser()}
                     style={styles.button}>
-                    <Text style={styles.buttonText}>Submit</Text>
+                    <Text style={styles.buttonText}>Add item</Text>
                 </TouchableHighlight>
 
                 {errorCtrl}
@@ -121,10 +145,6 @@ class UserAdd extends Component {
           </ScrollView>
         )
     }
-
-    onLoginPressed(){
-				this.props.onLogin();
-    }
 }
 
 const styles = StyleSheet.create({
@@ -132,28 +152,25 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      //backgroundColor: '#F5FCFF',
+      backgroundColor: 'gray',
+    },
+    countHeader: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 15,
+      backgroundColor: '#F5FCFF',
+    },
+  	countFooter: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 10,
+      borderColor: '#D7D7D7',
+      backgroundColor: 'whitesmoke'
     },
     welcome: {
       fontSize: 20,
       textAlign: 'center',
       margin: 20,
-    },
-    container: {
-        //backgroundColor: '#F5FCFF',
-        paddingTop: 10,
-        padding: 10,
-        alignItems: 'center',
-        flex: 1
-    },
-    logo: {
-        width: 66,
-        height: 65
-    },
-    heading: {
-        fontSize: 30,
-        margin: 10,
-        marginBottom: 20
     },
     loginInput: {
         height: 50,
@@ -161,9 +178,9 @@ const styles = StyleSheet.create({
         padding: 4,
         fontSize: 18,
         borderWidth: 1,
-        borderColor: '#48BBEC',
+        borderColor: 'lightgray',
         borderRadius: 0,
-        color: '#48BBEC'
+        color: 'gray'
     },
     button: {
         height: 50,
@@ -184,7 +201,14 @@ const styles = StyleSheet.create({
     },
     error: {
         color: 'red',
-        paddingTop: 10
+        paddingTop: 10,
+        textAlign: 'center'
+    },
+    img: {
+      height: 95,
+      width: 75,
+      borderRadius: 20,
+      margin: 20
     }
 });
 

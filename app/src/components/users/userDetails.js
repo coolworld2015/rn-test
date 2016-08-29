@@ -22,21 +22,73 @@ class UserDetails extends Component {
 
         this.state = {
             pushEvent: props.pushEvent,
+            id: props.pushEvent.id,
             name: props.pushEvent.name,
             pass: props.pushEvent.pass,
             description: props.pushEvent.description
         };
     }
 
+    updateUser(){
+        this.setState({
+          showProgress: true
+        });
+
+ 			fetch('http://ui-base.herokuapp.com/api/users/update/', {
+            method: 'POST',
+            body: JSON.stringify({
+                id: this.state.id,
+                name: this.state.name,
+                pass: this.state.pass,
+                description: this.state.description
+              }),
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+          })
+        .then((responseData)=> {})
+         .catch((error)=> {
+           console.log(error);
+             this.setState({
+               serverError: true
+             });
+       })
+         .finally(()=> {
+           this.setState({
+             showProgress: false
+           });
+       		this.props.navigator.pop();
+ 				});
+    }
+
   render() {
+
+    if(this.state.showProgress){
+        return (
+            <View style={{
+                flex: 1,
+                justifyContent: 'center'
+            }}>
+                <ActivityIndicator
+                    size="large"
+                    animating={true} />
+            </View>
+        );
+      }
+
     return (
       <ScrollView>
-      <View style={styles.container}>
+        <View style={{
+            flex: 1,
+            padding: 10,
+            justifyContent: 'flex-start'
+        }}>
 
       <Text style={{
           fontSize: 24,
       		textAlign: 'center',
-      		marginTop: 0
+      		marginTop: 10,
       }}>
       		{this.state.name}
       </Text>
@@ -68,10 +120,9 @@ class UserDetails extends Component {
       </TextInput>
 
       <TouchableHighlight
-        //onPress={this.onLoginPressed.bind(this)}
-        //onPress={()=> this.addUser()}
+        onPress={()=> this.updateUser()}
         style={styles.button}>
-        <Text style={styles.buttonText}>Submit</Text>
+        <Text style={styles.buttonText}>Update item</Text>
       </TouchableHighlight>
 
         </View>
@@ -85,28 +136,25 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      //backgroundColor: '#F5FCFF',
+      backgroundColor: 'gray',
+    },
+    countHeader: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 15,
+      backgroundColor: '#F5FCFF',
+    },
+  	countFooter: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 10,
+      borderColor: '#D7D7D7',
+      backgroundColor: 'whitesmoke'
     },
     welcome: {
       fontSize: 20,
       textAlign: 'center',
       margin: 20,
-    },
-    container: {
-        //backgroundColor: '#F5FCFF',
-        paddingTop: 10,
-        padding: 10,
-        alignItems: 'center',
-        flex: 1
-    },
-    logo: {
-        width: 66,
-        height: 65
-    },
-    heading: {
-        fontSize: 30,
-        margin: 10,
-        marginBottom: 20
     },
     loginInput: {
         height: 50,
@@ -114,9 +162,9 @@ const styles = StyleSheet.create({
         padding: 4,
         fontSize: 18,
         borderWidth: 1,
-        borderColor: '#48BBEC',
+        borderColor: 'lightgray',
         borderRadius: 0,
-        color: '#48BBEC'
+        color: 'gray'
     },
     button: {
         height: 50,
@@ -137,7 +185,14 @@ const styles = StyleSheet.create({
     },
     error: {
         color: 'red',
-        paddingTop: 10
+        paddingTop: 10,
+        textAlign: 'center'
+    },
+    img: {
+      height: 95,
+      width: 75,
+      borderRadius: 20,
+      margin: 20
     }
 });
 
