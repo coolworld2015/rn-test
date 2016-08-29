@@ -26,12 +26,19 @@ class Login extends Component {
     }
 
     getUser(){
-           this.setState({
-             showProgress: true
-           });
+      if (this.state.username == undefined ||
+          this.state.password == undefined) {
+        this.setState({
+       			badCredentials: true
+     		});
+      return;
+      }
 
-      console.log('starting geting user...');
- 			fetch('http://ui-warehouse.herokuapp.com/api/users/findByName/'
+      this.setState({
+       	showProgress: true
+      });
+
+ 			fetch('http://ui-base.herokuapp.com/api/users/findByName/'
        + 	this.state.username, {
             method: 'get',
             headers: {
@@ -41,7 +48,7 @@ class Login extends Component {
           })
  				.then((response)=> response.json())
         .then((responseData)=> {
-
+console.log(this.state.password + ' - ' + responseData.pass);
    				if (this.state.password == responseData.pass) {
 
                this.setState({
@@ -99,8 +106,8 @@ class Login extends Component {
                     style={styles.loginInput}
                     placeholder="Password" secureTextEntry={true}></TextInput>
                 <TouchableHighlight
-                    onPress={this.onLoginPressed.bind(this)}
-                    //onPress={()=> this.getUser()}
+                    //onPress={this.onLoginPressed.bind(this)}
+                    onPress={()=> this.getUser()}
                     style={styles.button}>
                     <Text style={styles.buttonText}>Log in</Text>
                 </TouchableHighlight>
@@ -152,7 +159,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         //marginBottom: 20
     },
-    loginInput: {
+    loginInput1: {
         height: 50,
         marginTop: 10,
         padding: 4,
@@ -161,6 +168,16 @@ const styles = StyleSheet.create({
         borderColor: '#48BBEC',
         borderRadius: 0,
         color: '#48BBEC'
+    },
+    loginInput: {
+        height: 50,
+        marginTop: 10,
+        padding: 4,
+        fontSize: 18,
+        borderWidth: 1,
+        borderColor: 'lightgray',
+        borderRadius: 0,
+        color: 'gray'
     },
     button: {
         height: 50,

@@ -106,14 +106,14 @@ class UserDetails extends Component {
       </TextInput>
 
       <TextInput
-        onChangeText={(text)=> this.setState({name: text})}
+        onChangeText={(text)=> this.setState({pass: text})}
         style={styles.loginInput}
         value={this.state.pass}
         placeholder="Password">
       </TextInput>
 
       <TextInput
-        onChangeText={(text)=> this.setState({name: text})}
+        onChangeText={(text)=> this.setState({description: text})}
         style={styles.loginInput}
         value={this.state.description}
         placeholder="Description">
