@@ -13,7 +13,8 @@ import {
     ActivityIndicator,
     TabBarIOS,
     NavigatorIOS,
-    TextInput
+    TextInput,
+    Alert
 } from 'react-native';
 
 import UserDetails from './userDetails';
