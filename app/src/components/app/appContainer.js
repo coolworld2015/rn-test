@@ -35,10 +35,26 @@ class AppContainer extends Component {
     }
 
     render(){
+      /*
+      systemIcon List:
+      bookmarks
+      contacts
+      downloads
+      favorites
+      featured
+      history
+      more
+      "most-recent"
+      "most-viewed"
+      recents
+      search
+      "top-rated"
+      */
       return (
         <TabBarIOS style={styles.AppContainer}>
             <TabBarIOS.Item
                 title="Clients"
+                systemIcon="top-rated"
                 selected={this.state.selectedTab == 'Clients'}
         				onPress={()=> this.setState({selectedTab: 'Clients'})}>
 
@@ -55,6 +71,7 @@ class AppContainer extends Component {
 
             <TabBarIOS.Item
                 title="Collection"
+                systemIcon="bookmarks"
                 selected={this.state.selectedTab == 'Collection'}
         				onPress={()=> this.setState({selectedTab: 'Collection'})}>
 
@@ -71,6 +88,7 @@ class AppContainer extends Component {
 
             <TabBarIOS.Item
                  title="Phones"
+                 systemIcon="downloads"
                  selected={this.state.selectedTab == 'Phones'}
          				 onPress={()=> this.setState({selectedTab: 'Phones'})}>
 
@@ -124,10 +142,11 @@ class AppContainer extends Component {
   												}
                       }}
                   />
-              </TabBarIOS.Item>    
+              </TabBarIOS.Item>
 
             <TabBarIOS.Item
-                title="Movies"
+                title="Search"
+      					systemIcon="search"
                 selected={this.state.selectedTab == 'Movies'}
                 onPress={()=> this.setState({selectedTab: 'Movies'})}>
 
@@ -138,7 +157,7 @@ class AppContainer extends Component {
                     ref="search"
                     initialRoute={{
                         component: Search,
-                        title: 'Movies',
+                        title: 'Search',
                         leftButtonTitle: 'Add',
                         rightButtonTitle: 'New',
                         onRightButtonPress: () => {

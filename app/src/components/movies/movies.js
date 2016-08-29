@@ -51,7 +51,8 @@ class Movies extends Component {
 						 console.log(responseData.results)
              this.setState({
                dataSource: this.state.dataSource.cloneWithRows(responseData.results),
-               resultsCount: responseData.results.length
+               resultsCount: responseData.results.length,
+               responseData: responseData.results
              });
          /*
          this.props.navigator.replace({
@@ -90,7 +91,7 @@ class Movies extends Component {
           	>
             <View style={styles.imgsList}>
               <Image
-        source={{uri: rowData.artworkUrl100.replace('100x100bb.jpg', '500x500bb.jpg')}}
+                  source={{uri: rowData.artworkUrl100.replace('100x100bb.jpg', '500x500bb.jpg')}}
                   style={styles.img}
               />
                 <View style={{
@@ -131,24 +132,46 @@ class Movies extends Component {
         );
       }
         return (
-
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <View style={{marginTop: 60}}>
-            <Text style={styles.countHeader}>
-            	{this.state.resultsCount} entries were found.
-              </Text>
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{marginTop: 60}}>
+              <TextInput style={{
+                  height: 45,
+                  marginTop: 5,
+                  padding: 5,
+                  backgroundColor: 'white',
+                  borderWidth: 1,
+                  borderColor: 'lightgray',
+                  borderRadius: 0,
+          				}}
+              onChangeText={(text)=> {
+                  var arr = [].concat(this.state.responseData);
+                  var items = arr.filter((el) => el.trackName.indexOf(text) >= 0);
+                  this.setState({
+                     dataSource: this.state.dataSource.cloneWithRows(items),
+                     resultsCount: items.length,
+                  })
+                }}
+                placeholder="Search">
+              </TextInput>
 
           	{errorCtrl}
 
             </View>
 
-          <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+          <ScrollView style={{marginTop: 0, marginBottom: 0}}>
             <ListView
               dataSource={this.state.dataSource}
               renderRow={this.renderRow.bind(this)}
             />
   				</ScrollView>
-			  </View>
+
+          <View style={{marginBottom: 49}}>
+            <Text style={styles.countFooter}>
+              {this.state.resultsCount} entries were found.
+            </Text>
+          </View>
+
+        </View>
       )
 	}
 }
@@ -170,6 +193,13 @@ const styles = StyleSheet.create({
       padding: 15,
       backgroundColor: '#F5FCFF',
     },
+  	countFooter: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 10,
+      borderColor: '#D7D7D7',
+      backgroundColor: 'whitesmoke'
+    },
     img: {
       height: 95,
       width: 75,
@@ -177,9 +207,9 @@ const styles = StyleSheet.create({
       margin: 20
     },
     error: {
-        color: 'red',
-        paddingTop: 10,
-        textAlign: 'center'
+      color: 'red',
+      paddingTop: 10,
+      textAlign: 'center'
     }
 });
 

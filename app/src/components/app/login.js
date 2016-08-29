@@ -144,12 +144,13 @@ const styles = StyleSheet.create({
     logo: {
         width: 150,
         height: 150,
-        paddingTop: 140
+        paddingTop: 140,
+        borderRadius: 20,
     },
     heading: {
         fontSize: 30,
-        margin: 10,
-        marginBottom: 20
+        marginTop: 10,
+        //marginBottom: 20
     },
     loginInput: {
         height: 50,

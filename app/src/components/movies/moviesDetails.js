@@ -65,7 +65,11 @@ class MoviesDetails extends Component {
             {this.state.pushEvent.artistName}
           </Text>
 
-          <Text style={styles.welcome}>
+          <Text style={{
+            fontSize: 16,
+            padding: 20,
+            textAlign: 'justify'
+          }}>
             {this.state.pushEvent.longDescription}
           </Text>
 
@@ -83,9 +87,9 @@ const styles = StyleSheet.create({
       backgroundColor: '#F5FCFF',
     },
     welcome: {
-      fontSize: 20,
+      fontSize: 18,
       textAlign: 'center',
-      margin: 20,
+      margin: 10,
     },
     container: {
         backgroundColor: '#F5FCFF',

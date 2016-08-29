@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 10
     },
-    loginInput: {
+    loginInput1: {
         height: 50,
         marginTop: 10,
         padding: 4,
@@ -85,6 +85,16 @@ const styles = StyleSheet.create({
         borderColor: '#48BBEC',
         borderRadius: 0,
         color: '#48BBEC'
+    },
+    loginInput: {
+        height: 50,
+        marginTop: 10,
+        padding: 4,
+        fontSize: 18,
+        borderWidth: 1,
+        borderColor: 'lightgray',
+        borderRadius: 0,
+        color: 'gray'
     },
     button: {
         height: 50,

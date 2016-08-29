@@ -231,7 +231,7 @@ class Users extends Component {
             </View>
 
   			  </View>
-      );
+      )
 	}
 }
 
