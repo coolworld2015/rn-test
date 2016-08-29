@@ -21,18 +21,27 @@ class UserDetails extends Component {
         super(props);
 
         this.state = {
-            pushEvent: props.pushEvent,
             id: props.pushEvent.id,
             name: props.pushEvent.name,
             pass: props.pushEvent.pass,
-            description: props.pushEvent.description
+            description: props.pushEvent.description,
+            showProgress: false
         };
     }
 
     updateUser(){
+      if (this.state.name == '' ||
+          this.state.pass == '' ||
+          this.state.description == '') {
         this.setState({
-          showProgress: true
-        });
+       			invalidValue: true
+     		});
+      return;
+      }
+
+      this.setState({
+        showProgress: true
+      });
 
  			fetch('http://ui-base.herokuapp.com/api/users/update/', {
             method: 'POST',
@@ -47,7 +56,10 @@ class UserDetails extends Component {
                 'Content-Type': 'application/json'
               }
           })
-        .then((responseData)=> {})
+        .then((response)=> response.json())
+        .then((responseData)=> {
+            this.props.navigator.pop()
+        })
          .catch((error)=> {
            console.log(error);
              this.setState({
@@ -58,24 +70,25 @@ class UserDetails extends Component {
            this.setState({
              showProgress: false
            });
-       		this.props.navigator.pop();
  				});
     }
 
   render() {
+    var errorCtrl = <View />;
 
-    if(this.state.showProgress){
-        return (
-            <View style={{
-                flex: 1,
-                justifyContent: 'center'
-            }}>
-                <ActivityIndicator
-                    size="large"
-                    animating={true} />
-            </View>
-        );
-      }
+    if(this.state.serverError){
+        errorCtrl = <Text style={styles.error}>
+            Something went wrong.
+        </Text>;
+    }
+
+    var validCtrl = <View />;
+
+    if(this.state.invalidValue){
+        validCtrl = <Text style={styles.error}>
+            Value required - please provide.
+        </Text>;
+    }
 
     return (
       <ScrollView>
@@ -94,7 +107,10 @@ class UserDetails extends Component {
       </Text>
 
       <TextInput
-        onChangeText={(text)=> this.setState({name: text})}
+      onChangeText={(text)=> this.setState({
+        name: text,
+        invalidValue: false
+      })}
         style={styles.loginInput}
         value={this.state.name}
         placeholder="Name">
@@ -102,22 +118,30 @@ class UserDetails extends Component {
 
       <TextInput
         style={styles.loginInput}
-        value={this.state.pushEvent.id}>
+        value={this.state.id}>
       </TextInput>
 
       <TextInput
-        onChangeText={(text)=> this.setState({pass: text})}
+      onChangeText={(text)=> this.setState({
+        pass: text,
+        invalidValue: false
+      })}
         style={styles.loginInput}
         value={this.state.pass}
         placeholder="Password">
       </TextInput>
 
       <TextInput
-        onChangeText={(text)=> this.setState({description: text})}
+        onChangeText={(text)=> this.setState({
+          description: text,
+          invalidValue: false
+        })}
         style={styles.loginInput}
         value={this.state.description}
         placeholder="Description">
       </TextInput>
+
+ 			{validCtrl}
 
       <TouchableHighlight
         onPress={()=> this.updateUser()}
@@ -125,8 +149,15 @@ class UserDetails extends Component {
         <Text style={styles.buttonText}>Update item</Text>
       </TouchableHighlight>
 
-        </View>
-      </ScrollView>
+      {errorCtrl}
+
+      <ActivityIndicator
+          animating={this.state.showProgress}
+          size="large"
+          style={styles.loader}
+       />
+      </View>
+    </ScrollView>
     );
   }
 }

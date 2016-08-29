@@ -58,6 +58,7 @@ class UserAdd extends Component {
           })
  				.then((response)=> response.json())
         .then((responseData)=> {
+            this.props.navigator.pop()
 	       })
          .catch((error)=> {
            console.log(error);
@@ -69,7 +70,6 @@ class UserAdd extends Component {
            this.setState({
              showProgress: false
            });
-       		this.props.navigator.pop();
  				});
     }
 
@@ -107,21 +107,30 @@ class UserAdd extends Component {
                 </Text>
 
                 <TextInput
-                    onChangeText={(text)=> this.setState({name: text})}
+                    onChangeText={(text)=> this.setState({
+                      name: text,
+                      invalidValue: false
+                    })}
                     style={styles.loginInput}
                     value={this.state.name}
                     placeholder="Name">
                 </TextInput>
 
                 <TextInput
-                    onChangeText={(text)=> this.setState({pass: text})}
+                onChangeText={(text)=> this.setState({
+                  pass: text,
+                  invalidValue: false
+                })}
                     style={styles.loginInput}
                     value={this.state.pass}
                     placeholder="Password">
                 </TextInput>
 
                 <TextInput
-                    onChangeText={(text)=> this.setState({description: text})}
+                onChangeText={(text)=> this.setState({
+                  description: text,
+                  invalidValue: false
+                })}
                     style={styles.loginInput}
                     value={this.state.description}
                     placeholder="Description"></TextInput>
