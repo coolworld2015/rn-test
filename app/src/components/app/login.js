@@ -48,7 +48,6 @@ class Login extends Component {
           })
  				.then((response)=> response.json())
         .then((responseData)=> {
-console.log(this.state.password + ' - ' + responseData.pass);
    				if (this.state.password == responseData.pass) {
 
                this.setState({
@@ -106,8 +105,8 @@ console.log(this.state.password + ' - ' + responseData.pass);
                     style={styles.loginInput}
                     placeholder="Password" secureTextEntry={true}></TextInput>
                 <TouchableHighlight
-                    //onPress={this.onLoginPressed.bind(this)}
-                    onPress={()=> this.getUser()}
+onPress={this.onLoginPressed.bind(this)}
+//onPress={()=> this.getUser()}
                     style={styles.button}>
                     <Text style={styles.buttonText}>Log in</Text>
                 </TouchableHighlight>

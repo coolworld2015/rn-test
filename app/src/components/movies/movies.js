@@ -26,9 +26,8 @@ class Movies extends Component {
             rowHasChanged: (r1, r2) => r1 != r2
         });
 
-        var items = [];
         this.state = {
-            dataSource: ds.cloneWithRows(items),
+            dataSource: ds.cloneWithRows([]),
             searchQuery: props.searchQuery,
             showProgress: true,
 						resultsCount: 0

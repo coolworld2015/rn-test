@@ -71,7 +71,7 @@ class AppContainer extends Component {
 
             <TabBarIOS.Item
                 title="Collection"
-                systemIcon="bookmarks"
+                systemIcon="history"
                 selected={this.state.selectedTab == 'Collection'}
         				onPress={()=> this.setState({selectedTab: 'Collection'})}>
 
@@ -88,7 +88,7 @@ class AppContainer extends Component {
 
             <TabBarIOS.Item
                  title="Phones"
-                 systemIcon="downloads"
+                 systemIcon="bookmarks"
                  selected={this.state.selectedTab == 'Phones'}
          				 onPress={()=> this.setState({selectedTab: 'Phones'})}>
 
@@ -154,20 +154,9 @@ class AppContainer extends Component {
                     style={{
                         flex: 1
                     }}
-                    ref="search"
                     initialRoute={{
                         component: Search,
-                        title: 'Search',
-                        leftButtonTitle: 'Add',
-                        rightButtonTitle: 'New',
-                        onRightButtonPress: () => {
-                            this.refs.search.navigator.push({
-                              title: "Users",
-                              component: Users,
-                              rightButtonTitle: 'Cancel',
-                              onRightButtonPress: () => { this.refs.search.navigator.pop(); }
-                            });
-                       }
+                        title: 'Search'
                 		}}
                />
             </TabBarIOS.Item>
