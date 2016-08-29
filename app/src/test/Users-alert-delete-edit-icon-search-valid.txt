@@ -17,6 +17,8 @@ import {
   	Alert
 } from 'react-native';
 
+console.disableYellowBox = true;
+
 class AppContainer extends Component {
     constructor(props){
         super(props);
@@ -245,7 +247,7 @@ class Users extends Component {
           				}}
               onChangeText={(text)=> {
                   var arr = [].concat(this.state.responseData);
-                  var items = arr.filter((el) => el.name.indexOf(text) >= 0); 
+                  var items = arr.filter((el) => el.name.indexOf(text) != -1); 
                   this.setState({
                      dataSource: this.state.dataSource.cloneWithRows(items),
                      resultsCount: items.length,
@@ -368,14 +370,14 @@ class UserDetails extends Component {
       </TextInput>
         
       <TextInput
-        onChangeText={(text)=> this.setState({name: text})}
+        onChangeText={(text)=> this.setState({pass: text})}
         style={styles.loginInput}
         value={this.state.pass}
         placeholder="Password">
       </TextInput>
         
       <TextInput
-        onChangeText={(text)=> this.setState({name: text})}
+        onChangeText={(text)=> this.setState({description: text})}
         style={styles.loginInput}
         value={this.state.description}
         placeholder="Description">
