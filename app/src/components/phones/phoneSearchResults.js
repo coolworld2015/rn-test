@@ -48,10 +48,10 @@ class PhoneSearchResults extends Component {
           })
           .then((response)=> response.json())
           .then((responseData)=> {
-						 console.log(responseData)
              this.setState({
-               dataSource: this.state.dataSource.cloneWithRows(responseData),
-               resultsCount: responseData.length
+               dataSource: this.state.dataSource.cloneWithRows(responseData.sort(this.sort)),
+               resultsCount: responseData.length,
+               responseData: responseData.sort(this.sort)
              });
 
        })
@@ -67,10 +67,25 @@ class PhoneSearchResults extends Component {
  				});
     }
 
+    sort(a, b) {
+        var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+        if (nameA < nameB) {
+            return -1
+        }
+        if (nameA > nameB) {
+            return 1
+        }
+        return 0;
+    }
+
     pressRow(rowData){
         this.props.navigator.push({
             title: rowData.trackName,
             component: PhoneDetails,
+            rightButtonTitle: 'Cancel',
+            onRightButtonPress: () => {
+                this.props.navigator.pop()
+            },
             passProps: {
                 pushEvent: rowData
             }
@@ -124,25 +139,48 @@ class PhoneSearchResults extends Component {
       return (
         <View style={{flex: 1, justifyContent: 'center'}}>
           <View style={{marginTop: 60}}>
-            <Text style={styles.countHeader}>
-              {this.state.resultsCount} entries were found.
-            </Text>
+          <TextInput style={{
+              height: 45,
+              marginTop: 5,
+              padding: 5,
+              backgroundColor: 'white',
+              borderWidth: 1,
+              borderColor: 'lightgray',
+              borderRadius: 0,
+              }}
+          onChangeText={(text)=> {
+              var arr = [].concat(this.state.responseData);
+              var items = arr.filter((el) => el.phone.indexOf(text) != -1);
+              this.setState({
+                 dataSource: this.state.dataSource.cloneWithRows(items),
+                 resultsCount: items.length,
+              })
+            }}
+            placeholder="Search">
+          </TextInput>
 
           {errorCtrl}
 
           </View>
 
-          <ScrollView style={{marginTop: 0, marginBottom: 60}}>
+          <ScrollView
+              style={{marginTop: 0, marginBottom: 0}}>
             <ListView
               dataSource={this.state.dataSource}
               renderRow={this.renderRow.bind(this)}
             />
           </ScrollView>
+
+          <View style={{marginBottom: 49}}>
+            <Text style={styles.countFooter}>
+              {this.state.resultsCount} entries were found.
+            </Text>
+          </View>
+
         </View>
     );
   }
 }
-
 
 const styles = StyleSheet.create({
     AppContainer: {
@@ -150,6 +188,19 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: '#F5FCFF',
+    },
+    countHeader: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 15,
+      backgroundColor: '#F5FCFF',
+    },
+  	countFooter: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 10,
+      borderColor: '#D7D7D7',
+      backgroundColor: 'whitesmoke'
     },
     countHeader: {
       fontSize: 16,
@@ -211,6 +262,5 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     }
 });
-
 
 module.exports = PhoneSearchResults;

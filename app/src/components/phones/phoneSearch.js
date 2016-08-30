@@ -103,11 +103,51 @@ class PhoneSearch extends Component {
 }
 
 const styles = StyleSheet.create({
+    AppContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#F5FCFF',
+    },
+    countHeader: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 15,
+      backgroundColor: '#F5FCFF',
+    },
+  	countFooter: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 10,
+      borderColor: '#D7D7D7',
+      backgroundColor: 'whitesmoke'
+    },
+    countHeader: {
+      fontSize: 16,
+      textAlign: 'center',
+      padding: 15,
+      backgroundColor: '#F5FCFF',
+    },
+    welcome: {
+      fontSize: 20,
+      textAlign: 'center',
+      margin: 20,
+    },
     container: {
+        backgroundColor: '#F5FCFF',
+        paddingTop: 40,
         padding: 10,
         alignItems: 'center',
-        flex: 1,
-        marginTop: 10
+        flex: 1
+    },
+    logo: {
+        width: 66,
+        height: 65
+    },
+    heading: {
+        fontSize: 30,
+        margin: 10,
+        marginBottom: 20
     },
     loginInput: {
         height: 50,
@@ -117,7 +157,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#48BBEC',
         borderRadius: 0,
-        color: 'gray'
+        color: '#48BBEC'
     },
     button: {
         height: 50,

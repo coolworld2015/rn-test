@@ -45,7 +45,6 @@ class Phones extends Component {
           })
  				.then((response)=> response.json())
         .then((responseData)=> {
-
            this.setState({
              dataSource: this.state.dataSource.cloneWithRows(responseData.splice(0,100).sort(this.sort)),
              //resultsCount: responseData.length
