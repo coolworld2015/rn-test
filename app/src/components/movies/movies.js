@@ -76,6 +76,10 @@ class Movies extends Component {
         this.props.navigator.push({
             title: rowData.trackName,
             component: MoviesDetails,
+            rightButtonTitle: 'Cancel',
+            onRightButtonPress: () => {
+                this.props.navigator.pop()
+            },
             passProps: {
                 pushEvent: rowData
             }

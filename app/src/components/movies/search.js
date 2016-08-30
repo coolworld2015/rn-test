@@ -89,8 +89,8 @@ class Search extends Component {
         }
 
         this.props.navigator.push({
-            component: Movies,
             title: this.state.searchQuery,
+            component: Movies,
             rightButtonTitle: 'Cancel',
             onRightButtonPress: () => {
                 this.props.navigator.pop()
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#48BBEC',
         borderRadius: 0,
-        color: '#48BBEC'
+        color: 'gray'
     },
     loginInput: {
         height: 50,
