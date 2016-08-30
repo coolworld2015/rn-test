@@ -49,7 +49,7 @@ class Phones extends Component {
            this.setState({
              dataSource: this.state.dataSource.cloneWithRows(responseData.splice(0,100).sort(this.sort)),
              //resultsCount: responseData.length
-             resultsCount: 10,
+             resultsCount: 100,
              responseData: responseData.splice(0,100).sort(this.sort)
            })
        })
@@ -80,6 +80,10 @@ class Phones extends Component {
         this.props.navigator.push({
             title: rowData.name,
             component: PhoneDetails,
+            rightButtonTitle: 'Cancel',
+            onRightButtonPress: () => {
+                this.props.navigator.pop()
+            },
             passProps: {
                 pushEvent: rowData
             }

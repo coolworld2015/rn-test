@@ -21,46 +21,47 @@ class PhoneDetails extends Component {
         super(props);
 
         this.state = {
-            pushEvent: props.pushEvent
+          id: props.pushEvent.id,
+          name: props.pushEvent.name,
+          phone: props.pushEvent.phone,
+          street: props.pushEvent.street,
+          house: props.pushEvent.house,
+          apt: props.pushEvent.apt,
+          index: props.pushEvent.index
         };
     }
 
   render() {
     return (
       <ScrollView>
-        <View style={{
-            flex: 1,
-            paddingTop: 20,
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start'
-        }}>
+        <View>
 
-          <Text style={styles.welcome}>
-            Name: {this.state.pushEvent.name}
+          <Text style={styles.headder}>
+          		{this.state.name}
           </Text>
 
-          <Text style={styles.welcome}>
-            ID: {this.state.pushEvent.id}
+          <Text style={styles.details}>
+              Phone: {this.state.phone}
           </Text>
 
-          <Text style={styles.welcome}>
-            Phone: {this.state.pushEvent.phone}
+          <Text style={styles.details}>
+              Str: {this.state.street}
           </Text>
 
-          <Text style={styles.welcome}>
-            Str: {this.state.pushEvent.street}
+          <Text style={styles.details}>
+              House: {this.state.house}
           </Text>
 
-          <Text style={styles.welcome}>
-            House: {this.state.pushEvent.house}
+          <Text style={styles.details}>
+              Apt: {this.state.apt}
           </Text>
 
-          <Text style={styles.welcome}>
-            Apt: {this.state.pushEvent.apt}
+          <Text style={styles.details}>
+              ID: {this.state.id}
           </Text>
 
-          <Text style={styles.welcome}>
-            Zip: {this.state.pushEvent.index}
+          <Text style={styles.details}>
+              Zip: {this.state.index}
           </Text>
 
         </View>
@@ -70,32 +71,29 @@ class PhoneDetails extends Component {
 }
 
 const styles = StyleSheet.create({
-    AppContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-      fontSize: 20,
+    headder: {
+      fontSize: 24,
       textAlign: 'center',
-      margin: 20,
+      margin: 10,
+      paddingTop: 10
+    },
+    details: {
+      fontSize: 20,
+      padding: 10,
+      margin: 5,
+      borderWidth: 1,
+      borderColor: 'lightgray'
     },
     container: {
-        backgroundColor: '#F5FCFF',
-        paddingTop: 40,
-        padding: 10,
-        alignItems: 'center',
-        flex: 1
+      backgroundColor: '#F5FCFF',
+      paddingTop: 40,
+      padding: 10,
+      alignItems: 'center',
+      flex: 1
     },
     logo: {
         width: 66,
         height: 65
-    },
-    heading: {
-        fontSize: 30,
-        margin: 10,
-        marginBottom: 20
     },
     loginInput: {
         height: 50,
@@ -103,9 +101,9 @@ const styles = StyleSheet.create({
         padding: 4,
         fontSize: 18,
         borderWidth: 1,
-        borderColor: '#48BBEC',
+        borderColor: 'lightgray',
         borderRadius: 0,
-        color: '#48BBEC'
+        color: 'gray'
     },
     button: {
         height: 50,
