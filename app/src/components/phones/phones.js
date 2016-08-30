@@ -47,10 +47,10 @@ class Phones extends Component {
         .then((responseData)=> {
 
            this.setState({
-             dataSource: this.state.dataSource.cloneWithRows(responseData.sort(this.sort).splice(0,10)),
+             dataSource: this.state.dataSource.cloneWithRows(responseData.splice(0,100).sort(this.sort)),
              //resultsCount: responseData.length
              resultsCount: 10,
-             responseData: responseData
+             responseData: responseData.splice(0,100).sort(this.sort)
            })
        })
          .catch((error)=> {
@@ -109,6 +109,17 @@ class Phones extends Component {
         );
     }
 
+    refreshData(event){
+      if (event.nativeEvent.contentOffset.y <= -70) {
+
+        this.setState({
+            showProgress: true,
+            resultsCount: event.nativeEvent.contentOffset.y
+        });
+        setTimeout(() => {this.getPhones()}, 300);
+      }
+    }
+
     render(){
       var errorCtrl = <View />;
 
@@ -144,7 +155,7 @@ class Phones extends Component {
                 }}
             onChangeText={(text)=> {
                 var arr = [].concat(this.state.responseData);
-                var items = arr.filter((el) => el.phone.indexOf(text) >= 0);
+                var items = arr.filter((el) => el.phone.indexOf(text) != -1);
                 this.setState({
                    dataSource: this.state.dataSource.cloneWithRows(items),
                    resultsCount: items.length,
@@ -157,7 +168,9 @@ class Phones extends Component {
 
             </View>
 
-            <ScrollView style={{marginTop: 0, marginBottom: 0}}>
+            <ScrollView
+                onScroll={this.refreshData.bind(this)} scrollEventThrottle={16}
+                style={{marginTop: 0, marginBottom: 0}}>
               <ListView
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow.bind(this)}
