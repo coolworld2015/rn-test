@@ -28,6 +28,22 @@ class PhoneSearch extends Component {
     }
 
     render(){
+      var errorCtrl = <View />;
+
+      if(this.state.serverError){
+          errorCtrl = <Text style={styles.error}>
+              Something went wrong.
+          </Text>;
+      }
+
+      var validCtrl = <View />;
+
+      if(this.state.invalidValue){
+          validCtrl = <Text style={styles.error}>
+              Value required - please provide.
+          </Text>;
+      }
+
         return (
             <ScrollView>
             <View style={styles.container}>
@@ -36,16 +52,23 @@ class PhoneSearch extends Component {
                     <Text style={styles.buttonText}>Search phones</Text>
                 </TouchableHighlight>
           			<TextInput
-                    onChangeText={(text)=> this.setState({searchQuery: text})}
+                    onChangeText={(text)=> this.setState({
+                      searchQuery: text,
+                      invalidValue: false
+                  })}
                     style={styles.loginInput}
                     placeholder="Search phones">
                 </TextInput>
+
+                {validCtrl}
 
                 <TouchableHighlight
                     onPress={this.onSearchPressed.bind(this)}
                     style={styles.button}>
                     <Text style={styles.buttonText}>Search</Text>
                 </TouchableHighlight>
+
+                {errorCtrl}
 
                 <ActivityIndicator
                     animating={this.state.showProgress}
@@ -58,14 +81,24 @@ class PhoneSearch extends Component {
     }
 
     onSearchPressed(){
-        this.props.navigator.push({
-            component: PhoneSearchResults,
-            title: this.state.searchQuery,
-            passProps: {
-                searchQuery: this.state.searchQuery
-            }
+      if (this.state.searchQuery == undefined) {
+        this.setState({
+            invalidValue: true
         });
+      return;
+      }
 
+      this.props.navigator.push({
+          component: PhoneSearchResults,
+          title: this.state.searchQuery,
+          rightButtonTitle: 'Cancel',
+          onRightButtonPress: () => {
+              this.props.navigator.pop()
+          },
+          passProps: {
+              searchQuery: this.state.searchQuery
+          }
+      });
     }
 }
 
@@ -84,7 +117,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#48BBEC',
         borderRadius: 0,
-        color: '#48BBEC'
+        color: 'gray'
     },
     button: {
         height: 50,
