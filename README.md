@@ -1,4 +1,4 @@
-# Test react-native
+# React Native Test
 git clone https://github.com/coolworld2015/rx-test.git
 -------------------------------------------------------------------------------------------------
 git config --global user.name "coolworld2015"
